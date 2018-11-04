@@ -7,10 +7,10 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Objects;
 import java.util.Optional;
 
-public class EncryptionUtils {
+public class AsymmetricKeyEncryptionUtils {
     private final String algorithm;
 
-    public EncryptionUtils(String algorithm) {
+    public AsymmetricKeyEncryptionUtils(String algorithm) {
         this.algorithm = algorithm;
     }
 
@@ -58,7 +58,7 @@ public class EncryptionUtils {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EncryptionUtils that = (EncryptionUtils) o;
+        AsymmetricKeyEncryptionUtils that = (AsymmetricKeyEncryptionUtils) o;
         return Objects.equals(algorithm, that.algorithm);
     }
 
@@ -69,7 +69,7 @@ public class EncryptionUtils {
 
     @Override
     public String toString() {
-        return "EncryptionUtils{" +
+        return "AsymmetricKeyEncryptionUtils{" +
                 "algorithm='" + algorithm + '\'' +
                 '}';
     }

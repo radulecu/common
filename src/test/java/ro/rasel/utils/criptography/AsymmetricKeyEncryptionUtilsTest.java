@@ -11,8 +11,8 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-public class EncryptionUtilsTest {
-    private final EncryptionUtils rsaEncodingUtils = new EncryptionUtils("RSA");
+public class AsymmetricKeyEncryptionUtilsTest {
+    private final AsymmetricKeyEncryptionUtils rsaEncodingUtils = new AsymmetricKeyEncryptionUtils("RSA");
 
     @Test
     public void assertThatConversionOfKeysToBase64IsReversible()
