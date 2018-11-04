@@ -8,13 +8,15 @@ import java.security.spec.InvalidKeySpecException;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-public class EncriptionUtilsTest {
+public class EncryptionUtilsTest {
     private final EncriptionUtils rsaEncodingUtils = new EncriptionUtils("RSA");
 
     @Test
-    public void assertThatConversionOfKeysToBase64IsReversible() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void assertThatConversionOfKeysToBase64IsReversible()
+            throws InvalidKeySpecException, NoSuchAlgorithmException {
         KeyPair keyPair = rsaEncodingUtils.generateNewKeypair(2048);
 
         String privateKey = rsaEncodingUtils.convertKeyToBase64(keyPair.getPrivate());
@@ -38,5 +40,17 @@ public class EncriptionUtilsTest {
                 not(rsaEncodingUtils.convertKeyToBase64(keyPair2.getPrivate())));
     }
 
+    @Test
+    public void assertNullsReturnNulls() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        assertNull(rsaEncodingUtils.convertKeyToBase64(null));
+        assertNull(rsaEncodingUtils.convertPrivateKeyFromBase64String(null));
+        assertNull(rsaEncodingUtils.convertPublicKeyFromBase64String(null));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void whenKeySizeIsNegativeThenGenerateNewKeypairThrowsIllegalArgumentException()
+            throws NoSuchAlgorithmException {
+        rsaEncodingUtils.generateNewKeypair(-1);
+    }
 
 }
