@@ -7,6 +7,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
@@ -27,9 +28,21 @@ public class EncodingUtilsTest {
 
     @Test
     public void assertThatConversionOfBytesToBase64IsReversible() {
-        String base64 = EncodingUtils.encodeStringToBase64String(text);
+        String base64String = EncodingUtils.encodeStringToBase64String(text);
+        byte[] base64Bytes = text != null ? text.getBytes() : null;
+
+        assertThat(EncodingUtils.decodeStringFromBase64String(
+                EncodingUtils.encodeStringToBase64String(text)), is(text));
+
+        assertThat(EncodingUtils.encodeStringToBase64String(
+                EncodingUtils.decodeStringFromBase64String(base64String)), is(base64String));
+
         assertThat(EncodingUtils.encodeBytesToBase64String(
-                EncodingUtils.decodeBytesFromBase64String(base64)), is(base64));
+                EncodingUtils.decodeBytesFromBase64String(base64String)), is(base64String));
+
+        assertThat(Objects.deepEquals(
+                EncodingUtils.decodeBytesFromBase64String(EncodingUtils.encodeBytesToBase64String(base64Bytes)),
+                base64Bytes), is(true));
     }
 
     @Test

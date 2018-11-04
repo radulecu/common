@@ -19,6 +19,6 @@ public class EncodingUtils {
     }
 
     public static String decodeStringFromBase64String(String encoded) {
-        return Optional.ofNullable(encoded).map(s -> Arrays.toString(Base64.getDecoder().decode(s))).orElse(null);
+        return Optional.ofNullable(encoded).map(s -> new String(Base64.getDecoder().decode(s)).intern()).orElse(null);
     }
 }
