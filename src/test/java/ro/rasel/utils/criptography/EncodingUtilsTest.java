@@ -40,9 +40,8 @@ public class EncodingUtilsTest {
         assertThat(EncodingUtils.encodeBytesToBase64String(
                 EncodingUtils.decodeBytesFromBase64String(base64String)), is(base64String));
 
-        assertThat(Objects.deepEquals(
-                EncodingUtils.decodeBytesFromBase64String(EncodingUtils.encodeBytesToBase64String(base64Bytes)),
-                base64Bytes), is(true));
+        assertThat(Objects.deepEquals(EncodingUtils.decodeBytesFromBase64String(
+                EncodingUtils.encodeBytesToBase64String(base64Bytes)), base64Bytes), is(true));
     }
 
     @Test

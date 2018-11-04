@@ -1,6 +1,5 @@
 package ro.rasel.utils.criptography;
 
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
 
