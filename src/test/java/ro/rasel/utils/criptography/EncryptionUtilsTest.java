@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class EncryptionUtilsTest {
-    private final EncriptionUtils rsaEncodingUtils = new EncriptionUtils("RSA");
+    private final EncryptionUtils rsaEncodingUtils = new EncryptionUtils("RSA");
 
     @Test
     public void assertThatConversionOfKeysToBase64IsReversible()
