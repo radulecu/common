@@ -25,7 +25,7 @@ public class EncodingUtilsTest {
     }
 
     @Test
-    public void assertThatConversionOfBytesToBase64IsReversible() {
+    public void assertThatConversionToBase64IsReversible() {
         String base64String = EncodingUtils.stringToBase64(text);
         byte[] base64Bytes = EncodingUtils.toBytes(base64String);
         byte[] textBytes = EncodingUtils.toBytes(text);
