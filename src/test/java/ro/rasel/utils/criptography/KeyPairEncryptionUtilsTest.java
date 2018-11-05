@@ -11,21 +11,21 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-public class AsymmetricKeyEncryptionUtilsTest {
-    private final AsymmetricKeyEncryptionUtils rsaEncodingUtils = new AsymmetricKeyEncryptionUtils("RSA");
+public class KeyPairEncryptionUtilsTest {
+    private final KeyPairEncryptionUtils rsaEncodingUtils = new KeyPairEncryptionUtils("RSA");
 
     @Test
     public void assertThatConversionOfKeysToBase64IsReversible()
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         KeyPair keyPair = rsaEncodingUtils.generateNewKeypair(2048);
 
-        String privateKey = rsaEncodingUtils.convertKeyToBase64(keyPair.getPrivate());
-        String publicKey = rsaEncodingUtils.convertKeyToBase64(keyPair.getPublic());
+        byte[] privateKey = rsaEncodingUtils.convertKeyToBase64(keyPair.getPrivate());
+        byte[] publicKey = rsaEncodingUtils.convertKeyToBase64(keyPair.getPublic());
 
-        assertThat(rsaEncodingUtils.convertKeyToBase64(
-                rsaEncodingUtils.convertBase64ToPrivateKey(privateKey)), is(privateKey));
-        assertThat(rsaEncodingUtils.convertKeyToBase64(
-                rsaEncodingUtils.convertBase64ToPublicKey(publicKey)), is(publicKey));
+        assertThat(EncodingUtils.toString(rsaEncodingUtils.convertKeyToBase64(
+                rsaEncodingUtils.convertBase64ToPrivateKey(privateKey))), is(EncodingUtils.toString(privateKey)));
+        assertThat(EncodingUtils.toString(rsaEncodingUtils.convertKeyToBase64(
+                rsaEncodingUtils.convertBase64ToPublicKey(publicKey))), is(EncodingUtils.toString(publicKey)));
 
     }
 

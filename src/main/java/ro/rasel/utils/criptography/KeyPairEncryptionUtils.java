@@ -7,10 +7,10 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Objects;
 import java.util.Optional;
 
-public class AsymmetricKeyEncryptionUtils {
+public class KeyPairEncryptionUtils {
     private final String algorithm;
 
-    public AsymmetricKeyEncryptionUtils(String algorithm) {
+    public KeyPairEncryptionUtils(String algorithm) {
         this.algorithm = algorithm;
     }
 
@@ -28,13 +28,13 @@ public class AsymmetricKeyEncryptionUtils {
         return keyPairGenerator.generateKeyPair();
     }
 
-    public String convertKeyToBase64(Key publicKey) {
+    public byte[] convertKeyToBase64(Key publicKey) {
         return Optional.ofNullable(publicKey)
-                .map(k -> EncodingUtils.toString(EncodingUtils.bytesToBase64(k.getEncoded())))
+                .map(k -> EncodingUtils.bytesToBase64(k.getEncoded()))
                 .orElse(null);
     }
 
-    public PrivateKey convertBase64ToPrivateKey(String privateKey)
+    public PrivateKey convertBase64ToPrivateKey(byte[] privateKey)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (privateKey == null) {
             return null;
@@ -43,10 +43,10 @@ public class AsymmetricKeyEncryptionUtils {
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return keyFactory
                 .generatePrivate(new PKCS8EncodedKeySpec(
-                        EncodingUtils.base64ToBytes(EncodingUtils.toBytes(privateKey))));
+                        EncodingUtils.base64ToBytes(privateKey)));
     }
 
-    public PublicKey convertBase64ToPublicKey(String publicKey)
+    public PublicKey convertBase64ToPublicKey(byte[] publicKey)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (publicKey == null) {
             return null;
@@ -54,14 +54,14 @@ public class AsymmetricKeyEncryptionUtils {
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return keyFactory.generatePublic(
-                new X509EncodedKeySpec(EncodingUtils.base64ToBytes(EncodingUtils.toBytes(publicKey))));
+                new X509EncodedKeySpec(EncodingUtils.base64ToBytes(publicKey)));
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AsymmetricKeyEncryptionUtils that = (AsymmetricKeyEncryptionUtils) o;
+        KeyPairEncryptionUtils that = (KeyPairEncryptionUtils) o;
         return Objects.equals(algorithm, that.algorithm);
     }
 
@@ -72,7 +72,7 @@ public class AsymmetricKeyEncryptionUtils {
 
     @Override
     public String toString() {
-        return "AsymmetricKeyEncryptionUtils{" +
+        return "KeyPairEncryptionUtils{" +
                 "algorithm='" + algorithm + '\'' +
                 '}';
     }
