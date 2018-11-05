@@ -23,9 +23,9 @@ public class AsymmetricKeyEncryptionUtilsTest {
         String publicKey = rsaEncodingUtils.convertKeyToBase64(keyPair.getPublic());
 
         assertThat(rsaEncodingUtils.convertKeyToBase64(
-                rsaEncodingUtils.convertPrivateKeyFromBase64String(privateKey)), is(privateKey));
+                rsaEncodingUtils.convertBase64ToPrivateKey(privateKey)), is(privateKey));
         assertThat(rsaEncodingUtils.convertKeyToBase64(
-                rsaEncodingUtils.convertPublicKeyFromBase64String(publicKey)), is(publicKey));
+                rsaEncodingUtils.convertBase64ToPublicKey(publicKey)), is(publicKey));
 
     }
 
@@ -43,8 +43,8 @@ public class AsymmetricKeyEncryptionUtilsTest {
     @Test
     public void assertNullsReturnNulls() throws InvalidKeySpecException, NoSuchAlgorithmException {
         assertNull(rsaEncodingUtils.convertKeyToBase64(null));
-        assertNull(rsaEncodingUtils.convertPrivateKeyFromBase64String(null));
-        assertNull(rsaEncodingUtils.convertPublicKeyFromBase64String(null));
+        assertNull(rsaEncodingUtils.convertBase64ToPrivateKey(null));
+        assertNull(rsaEncodingUtils.convertBase64ToPublicKey(null));
     }
 
     @Test(expected = IllegalArgumentException.class)

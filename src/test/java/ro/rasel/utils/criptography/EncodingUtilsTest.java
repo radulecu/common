@@ -7,11 +7,9 @@ import org.junit.runners.Parameterized.Parameters;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class EncodingUtilsTest {
@@ -28,27 +26,35 @@ public class EncodingUtilsTest {
 
     @Test
     public void assertThatConversionOfBytesToBase64IsReversible() {
-        String base64String = EncodingUtils.encodeStringToBase64String(text);
-        byte[] base64Bytes = text != null ? text.getBytes() : null;
+        String base64String = EncodingUtils.stringToBase64(text);
+        byte[] base64Bytes = EncodingUtils.toBytes(base64String);
+        byte[] textBytes = EncodingUtils.toBytes(text);
 
-        assertThat(EncodingUtils.decodeStringFromBase64String(
-                EncodingUtils.encodeStringToBase64String(text)), is(text));
+        assertThat(EncodingUtils.base64ToString(
+                EncodingUtils.stringToBase64(text)), is(text));
 
-        assertThat(EncodingUtils.encodeStringToBase64String(
-                EncodingUtils.decodeStringFromBase64String(base64String)), is(base64String));
+        assertThat(EncodingUtils.stringToBase64(
+                EncodingUtils.base64ToString(base64String)), is(base64String));
 
-        assertThat(EncodingUtils.encodeBytesToBase64String(
-                EncodingUtils.decodeBytesFromBase64String(base64String)), is(base64String));
+        assertThat(EncodingUtils.toString(EncodingUtils.bytesToBase64(
+                EncodingUtils.base64ToBytes(base64Bytes))), is(base64String));
 
-        assertThat(Objects.deepEquals(EncodingUtils.decodeBytesFromBase64String(
-                EncodingUtils.encodeBytesToBase64String(base64Bytes)), base64Bytes), is(true));
+        assertThat(EncodingUtils.toString(EncodingUtils.base64ToBytes(
+                EncodingUtils.bytesToBase64(textBytes))), is(text));
     }
 
     @Test
     public void assertNullsReturnNulls() {
-        assertNull(EncodingUtils.decodeBytesFromBase64String(null));
-        assertNull(EncodingUtils.encodeBytesToBase64String(null));
-        assertNull(EncodingUtils.decodeStringFromBase64String(null));
-        assertNull(EncodingUtils.encodeStringToBase64String(null));
+        assertNull(EncodingUtils.base64ToBytes(null));
+        assertNull(EncodingUtils.bytesToBase64(null));
+        assertNull(EncodingUtils.base64ToString(null));
+        assertNull(EncodingUtils.stringToBase64(null));
+    }
+
+    @Test
+    public void assertConversionBetweenBytesAndStringIsReversible() {
+        assertThat(EncodingUtils.toString(EncodingUtils.toBytes(text)), is(text));
+        // check conversion returns String from pool and has the exact same object as original text
+        assertTrue(EncodingUtils.toString(EncodingUtils.toBytes(text)) == text);
     }
 }

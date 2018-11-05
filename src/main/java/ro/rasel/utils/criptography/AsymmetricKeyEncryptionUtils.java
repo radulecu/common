@@ -29,11 +29,12 @@ public class AsymmetricKeyEncryptionUtils {
     }
 
     public String convertKeyToBase64(Key publicKey) {
-        return Optional.ofNullable(publicKey).map(k -> EncodingUtils.encodeBytesToBase64String(k.getEncoded()))
+        return Optional.ofNullable(publicKey)
+                .map(k -> EncodingUtils.toString(EncodingUtils.bytesToBase64(k.getEncoded())))
                 .orElse(null);
     }
 
-    public PrivateKey convertPrivateKeyFromBase64String(String privateKey)
+    public PrivateKey convertBase64ToPrivateKey(String privateKey)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (privateKey == null) {
             return null;
@@ -41,17 +42,19 @@ public class AsymmetricKeyEncryptionUtils {
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         return keyFactory
-                .generatePrivate(new PKCS8EncodedKeySpec(EncodingUtils.decodeBytesFromBase64String(privateKey)));
+                .generatePrivate(new PKCS8EncodedKeySpec(
+                        EncodingUtils.base64ToBytes(EncodingUtils.toBytes(privateKey))));
     }
 
-    public PublicKey convertPublicKeyFromBase64String(String publicKey)
+    public PublicKey convertBase64ToPublicKey(String publicKey)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (publicKey == null) {
             return null;
         }
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-        return keyFactory.generatePublic(new X509EncodedKeySpec(EncodingUtils.decodeBytesFromBase64String(publicKey)));
+        return keyFactory.generatePublic(
+                new X509EncodedKeySpec(EncodingUtils.base64ToBytes(EncodingUtils.toBytes(publicKey))));
     }
 
     @Override

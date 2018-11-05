@@ -4,20 +4,28 @@ import java.util.Base64;
 import java.util.Optional;
 
 public class EncodingUtils {
-    public static String encodeBytesToBase64String(byte[] bytes) {
-        return Optional.ofNullable(bytes).map(b -> Base64.getEncoder().encodeToString(b)).orElse(null);
+    public static byte[] bytesToBase64(byte[] bytes) {
+        return Optional.ofNullable(bytes).map(b -> Base64.getEncoder().encode(b)).orElse(null);
     }
 
-    public static byte[] decodeBytesFromBase64String(String encoded) {
-        return Optional.ofNullable(encoded).map(s -> Base64.getDecoder().decode(s)).orElse(null);
+    public static byte[] base64ToBytes(byte[] encoded) {
+        return Optional.ofNullable(encoded).map(b -> Base64.getDecoder().decode(b)).orElse(null);
     }
 
-    public static String encodeStringToBase64String(String value) {
-        return Optional.ofNullable(value).map(s -> encodeBytesToBase64String(s.getBytes())).orElse(null);
+    public static String stringToBase64(String value) {
+        return Optional.ofNullable(value).map(s -> toString(Base64.getEncoder().encode(toBytes(s)))).orElse(null);
 
     }
 
-    public static String decodeStringFromBase64String(String encoded) {
-        return Optional.ofNullable(encoded).map(s -> new String(Base64.getDecoder().decode(s)).intern()).orElse(null);
+    public static String base64ToString(String encoded) {
+        return Optional.ofNullable(encoded).map(s -> toString(Base64.getDecoder().decode(s))).orElse(null);
+    }
+
+    public static String toString(byte[] bytes) {
+        return Optional.ofNullable(bytes).map(bytes1 -> new String(bytes1).intern()).orElse(null);
+    }
+
+    public static byte[] toBytes(String string) {
+        return Optional.ofNullable(string).map(String::getBytes).orElse(null);
     }
 }
