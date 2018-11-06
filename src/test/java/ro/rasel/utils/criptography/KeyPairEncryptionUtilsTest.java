@@ -17,7 +17,7 @@ public class KeyPairEncryptionUtilsTest {
     @Test
     public void assertThatConversionOfKeysToBase64IsReversible()
             throws InvalidKeySpecException, NoSuchAlgorithmException {
-        KeyPair keyPair = rsaEncodingUtils.generateNewKeypair(2048);
+        KeyPair keyPair = rsaEncodingUtils.generateNewKeyPair(2048);
 
         byte[] privateKey = rsaEncodingUtils.toBytes(keyPair.getPrivate());
         byte[] publicKey = rsaEncodingUtils.toBytes(keyPair.getPublic());
@@ -31,8 +31,8 @@ public class KeyPairEncryptionUtilsTest {
 
     @Test
     public void assertThatEverytimeANewKeyIsGenerated() throws NoSuchAlgorithmException {
-        KeyPair keyPair = rsaEncodingUtils.generateNewKeypair(2048);
-        KeyPair keyPair2 = rsaEncodingUtils.generateNewKeypair(2048);
+        KeyPair keyPair = rsaEncodingUtils.generateNewKeyPair(2048);
+        KeyPair keyPair2 = rsaEncodingUtils.generateNewKeyPair(2048);
 
         assertThat(rsaEncodingUtils.toBytes(keyPair.getPublic()),
                 not(rsaEncodingUtils.toBytes(keyPair2.getPublic())));
@@ -50,7 +50,7 @@ public class KeyPairEncryptionUtilsTest {
     @Test(expected = IllegalArgumentException.class)
     public void whenKeySizeIsNegativeThenGenerateNewKeypairThrowsIllegalArgumentException()
             throws NoSuchAlgorithmException {
-        rsaEncodingUtils.generateNewKeypair(-1);
+        rsaEncodingUtils.generateNewKeyPair(-1);
     }
 
 }

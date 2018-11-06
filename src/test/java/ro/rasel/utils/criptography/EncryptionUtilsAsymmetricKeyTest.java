@@ -38,7 +38,7 @@ public class EncryptionUtilsAsymmetricKeyTest {
     public void assertThatEncriptionOfBytesIsReversible()
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
             NoSuchPaddingException {
-        KeyPair keyPair = keyPairEncryptionUtils.generateNewKeypair(2048);
+        KeyPair keyPair = keyPairEncryptionUtils.generateNewKeyPair(2048);
         byte[] bytes = EncodingUtils.toBytes(text);
 
         assertThat(EncodingUtils.toString(encryptionUtils
@@ -52,7 +52,7 @@ public class EncryptionUtilsAsymmetricKeyTest {
     public void assertNullsReturnNulls()
             throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
             NoSuchPaddingException {
-        KeyPair keyPair = keyPairEncryptionUtils.generateNewKeypair(2048);
+        KeyPair keyPair = keyPairEncryptionUtils.generateNewKeyPair(2048);
         assertNull(encryptionUtils.encryptMessage(null, keyPair.getPrivate()));
         assertNull(encryptionUtils.decryptMessage(null, keyPair.getPublic()));
     }
