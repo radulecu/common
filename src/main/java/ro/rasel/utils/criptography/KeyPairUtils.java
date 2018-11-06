@@ -2,16 +2,15 @@ package ro.rasel.utils.criptography;
 
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Objects;
 import java.util.Optional;
 
-public class KeySpecEncryptionUtils {
+public class KeyPairUtils {
     private final String algorithm;
 
-    public KeySpecEncryptionUtils(String algorithm) {
+    public KeyPairUtils(String algorithm) {
         this.algorithm = algorithm;
     }
 
@@ -19,7 +18,7 @@ public class KeySpecEncryptionUtils {
         return algorithm;
     }
 
-    public KeySpec generateNewKeySpec(int keySize) throws NoSuchAlgorithmException {
+    public KeyPair generateNewKeyPair(int keySize) throws NoSuchAlgorithmException {
         if (keySize <= 0) {
             throw new IllegalArgumentException("keySize must be positive");
         }
@@ -57,7 +56,7 @@ public class KeySpecEncryptionUtils {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        KeySpecEncryptionUtils that = (KeySpecEncryptionUtils) o;
+        KeyPairUtils that = (KeyPairUtils) o;
         return Objects.equals(algorithm, that.algorithm);
     }
 
@@ -68,7 +67,7 @@ public class KeySpecEncryptionUtils {
 
     @Override
     public String toString() {
-        return "KeyPairEncryptionUtils{" +
+        return "KeyPairUtils{" +
                 "algorithm='" + algorithm + '\'' +
                 '}';
     }
