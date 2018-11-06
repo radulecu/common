@@ -19,13 +19,13 @@ public class KeyPairEncryptionUtilsTest {
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         KeyPair keyPair = rsaEncodingUtils.generateNewKeypair(2048);
 
-        byte[] privateKey = rsaEncodingUtils.convertKeyToBase64(keyPair.getPrivate());
-        byte[] publicKey = rsaEncodingUtils.convertKeyToBase64(keyPair.getPublic());
+        byte[] privateKey = rsaEncodingUtils.toBytes(keyPair.getPrivate());
+        byte[] publicKey = rsaEncodingUtils.toBytes(keyPair.getPublic());
 
-        assertThat(EncodingUtils.toString(rsaEncodingUtils.convertKeyToBase64(
-                rsaEncodingUtils.convertBase64ToPrivateKey(privateKey))), is(EncodingUtils.toString(privateKey)));
-        assertThat(EncodingUtils.toString(rsaEncodingUtils.convertKeyToBase64(
-                rsaEncodingUtils.convertBase64ToPublicKey(publicKey))), is(EncodingUtils.toString(publicKey)));
+        assertThat(EncodingUtils.toString(rsaEncodingUtils.toBytes(
+                rsaEncodingUtils.toPrivateKey(privateKey))), is(EncodingUtils.toString(privateKey)));
+        assertThat(EncodingUtils.toString(rsaEncodingUtils.toBytes(
+                rsaEncodingUtils.toPublicKey(publicKey))), is(EncodingUtils.toString(publicKey)));
 
     }
 
@@ -34,17 +34,17 @@ public class KeyPairEncryptionUtilsTest {
         KeyPair keyPair = rsaEncodingUtils.generateNewKeypair(2048);
         KeyPair keyPair2 = rsaEncodingUtils.generateNewKeypair(2048);
 
-        assertThat(rsaEncodingUtils.convertKeyToBase64(keyPair.getPublic()),
-                not(rsaEncodingUtils.convertKeyToBase64(keyPair2.getPublic())));
-        assertThat(rsaEncodingUtils.convertKeyToBase64(keyPair.getPrivate()),
-                not(rsaEncodingUtils.convertKeyToBase64(keyPair2.getPrivate())));
+        assertThat(rsaEncodingUtils.toBytes(keyPair.getPublic()),
+                not(rsaEncodingUtils.toBytes(keyPair2.getPublic())));
+        assertThat(rsaEncodingUtils.toBytes(keyPair.getPrivate()),
+                not(rsaEncodingUtils.toBytes(keyPair2.getPrivate())));
     }
 
     @Test
     public void assertNullsReturnNulls() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        assertNull(rsaEncodingUtils.convertKeyToBase64(null));
-        assertNull(rsaEncodingUtils.convertBase64ToPrivateKey(null));
-        assertNull(rsaEncodingUtils.convertBase64ToPublicKey(null));
+        assertNull(rsaEncodingUtils.toBytes(null));
+        assertNull(rsaEncodingUtils.toPrivateKey(null));
+        assertNull(rsaEncodingUtils.toPublicKey(null));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -28,33 +28,28 @@ public class KeyPairEncryptionUtils {
         return keyPairGenerator.generateKeyPair();
     }
 
-    public byte[] convertKeyToBase64(Key publicKey) {
-        return Optional.ofNullable(publicKey)
-                .map(k -> EncodingUtils.bytesToBase64(k.getEncoded()))
-                .orElse(null);
+    public byte[] toBytes(Key key) {
+        return Optional.ofNullable(key).map(k -> k.getEncoded()).orElse(null);
     }
 
-    public PrivateKey convertBase64ToPrivateKey(byte[] privateKey)
+    public PrivateKey toPrivateKey(byte[] privateKey)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (privateKey == null) {
             return null;
         }
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-        return keyFactory
-                .generatePrivate(new PKCS8EncodedKeySpec(
-                        EncodingUtils.base64ToBytes(privateKey)));
+        return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKey));
     }
 
-    public PublicKey convertBase64ToPublicKey(byte[] publicKey)
+    public PublicKey toPublicKey(byte[] publicKey)
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (publicKey == null) {
             return null;
         }
 
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-        return keyFactory.generatePublic(
-                new X509EncodedKeySpec(EncodingUtils.base64ToBytes(publicKey)));
+        return keyFactory.generatePublic(new X509EncodedKeySpec(publicKey));
     }
 
     @Override
