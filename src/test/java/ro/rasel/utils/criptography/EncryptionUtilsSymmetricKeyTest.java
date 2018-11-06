@@ -3,11 +3,11 @@ package ro.rasel.utils.criptography;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -22,22 +22,24 @@ import static org.junit.Assert.assertThat;
 @RunWith(Parameterized.class)
 public class EncryptionUtilsSymmetricKeyTest {
     private final String text;
-    private final CryptographyAlgorithm cryptographyAlgorithm;
+    private final SymetricCryptographyAlgorithmEnum cryptographyAlgorithm;
     private final EncryptionUtils encryptionUtils;
     private final Key key;
 
-    public EncryptionUtilsSymmetricKeyTest(String text, CryptographyAlgorithm cryptographyAlgorithm) {
+    public EncryptionUtilsSymmetricKeyTest(String text, SymetricCryptographyAlgorithmEnum cryptographyAlgorithm)
+            throws NoSuchAlgorithmException {
         this.text = text;
         this.cryptographyAlgorithm = cryptographyAlgorithm;
         this.encryptionUtils = new EncryptionUtils(cryptographyAlgorithm.getCypherAlgorithm());
-        this.key = new SecretKeySpec(EncodingUtils.toBytes("testpasswordgdgsd234124123fgsddf"),cryptographyAlgorithm.getCypherAlgorithm());
+        this.key = new KeySpecUtils(cryptographyAlgorithm.getAlgorithm())
+                .generateNewKeySpec(cryptographyAlgorithm.getKeySize());
     }
 
-    @Parameterized.Parameters
+    @Parameters
     public static Collection<Object[]> data() {
         Collection<Object[]> result = new ArrayList<>();
         Arrays.asList("test", "(teststring)*(^*&787867", null, "", "\u4321\u3395\u2121").stream().forEach(
-                s -> Arrays.asList(CryptographyAlgorithm.values()).stream().filter(c -> c.isSimetryc())
+                s -> Arrays.asList(SymetricCryptographyAlgorithmEnum.values()).stream()
                         .forEach(c -> result.add(new Object[]{s, c}))
         );
         return result;
@@ -55,7 +57,6 @@ public class EncryptionUtilsSymmetricKeyTest {
 
     }
 
-    //
     @Test
     public void assertNullsReturnNulls()
             throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,

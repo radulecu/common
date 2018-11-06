@@ -11,11 +11,11 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-public class KeyPairEncryptionUtilsTest {
-    private final KeyPairEncryptionUtils rsaEncodingUtils = new KeyPairEncryptionUtils("RSA");
+public class KeyPairUtilsTest {
+    private final KeyPairUtils rsaEncodingUtils = new KeyPairUtils("RSA");
 
     @Test
-    public void assertThatConversionOfKeysToBase64IsReversible()
+    public void assertThatConversionOfKeysToBytesIsReversible()
             throws InvalidKeySpecException, NoSuchAlgorithmException {
         KeyPair keyPair = rsaEncodingUtils.generateNewKeyPair(2048);
 
