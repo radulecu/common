@@ -70,7 +70,6 @@ public class EncryptionUtils {
     private Cipher createCipher(Key key, int mode)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         Optional.of(key).orElseThrow(() -> new IllegalArgumentException("secretKey must not be null"));
-        System.out.println(algorithm);
         Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(mode, key);
         return cipher;
