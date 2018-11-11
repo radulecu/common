@@ -15,19 +15,21 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static ro.rasel.utils.criptography.EncryptionAlgorithm.RSA_ECB_PKCS1Padding;
 
 @RunWith(Parameterized.class)
-public class EncryptionUtilsAsymmetricKeyTest {
-    public static final AsymetricCryptographyAlgorithmEnum CRYPTOGRAPHY_ALGORITHM = AsymetricCryptographyAlgorithmEnum.RSA_ECB_PKCS1Padding;
+public class CipherUtilsAsymmetricKeyTest {
     private final String text;
-    private final KeyPairUtils keyPairUtils = new KeyPairUtils(
-            CRYPTOGRAPHY_ALGORITHM.getAlgorithm());
-    private final EncryptionUtils encryptionUtils =
-            new EncryptionUtils(AsymetricCryptographyAlgorithmEnum.RSA_ECB_PKCS1Padding.getCypherAlgorithm());
+    private final KeyPairUtils keyPairUtils;
+    private final CipherUtils cipherUtils;
 
-    public EncryptionUtilsAsymmetricKeyTest(String text) {
+    public CipherUtilsAsymmetricKeyTest(String text) {
         this.text = text;
+        ICipherAlgorithm encryptionAlgorithm = RSA_ECB_PKCS1Padding.getCipherAlgorithm();
+        keyPairUtils = new KeyPairUtils(encryptionAlgorithm.getAlgorithm());
+        cipherUtils = new CipherUtils(encryptionAlgorithm);
     }
 
     @Parameters
@@ -42,10 +44,9 @@ public class EncryptionUtilsAsymmetricKeyTest {
         KeyPair keyPair = keyPairUtils.generateNewKeyPair(2048);
         byte[] bytes = EncodingUtils.toBytes(text);
 
-        assertThat(EncodingUtils.toString(encryptionUtils
-                        .decryptMessage(encryptionUtils.encryptMessage(bytes, keyPair.getPrivate()), keyPair.getPublic())),
+        assertThat(EncodingUtils.toString(cipherUtils
+                        .decryptMessage(cipherUtils.encryptMessage(bytes, keyPair.getPrivate()), keyPair.getPublic())),
                 is(text));
-
     }
 
     @Test
@@ -53,7 +54,7 @@ public class EncryptionUtilsAsymmetricKeyTest {
             throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
             NoSuchPaddingException {
         KeyPair keyPair = keyPairUtils.generateNewKeyPair(2048);
-        assertNull(encryptionUtils.encryptMessage(null, keyPair.getPrivate()));
-        assertNull(encryptionUtils.decryptMessage(null, keyPair.getPublic()));
+        assertNull(cipherUtils.encryptMessage(null, keyPair.getPrivate()));
+        assertNull(cipherUtils.decryptMessage(null, keyPair.getPublic()));
     }
 }

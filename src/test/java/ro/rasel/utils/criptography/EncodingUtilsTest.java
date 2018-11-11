@@ -30,17 +30,12 @@ public class EncodingUtilsTest {
         byte[] base64Bytes = EncodingUtils.toBytes(base64String);
         byte[] textBytes = EncodingUtils.toBytes(text);
 
-        assertThat(EncodingUtils.base64ToString(
-                EncodingUtils.stringToBase64(text)), is(text));
-
-        assertThat(EncodingUtils.stringToBase64(
-                EncodingUtils.base64ToString(base64String)), is(base64String));
-
-        assertThat(EncodingUtils.toString(EncodingUtils.bytesToBase64(
-                EncodingUtils.base64ToBytes(base64Bytes))), is(base64String));
-
-        assertThat(EncodingUtils.toString(EncodingUtils.base64ToBytes(
-                EncodingUtils.bytesToBase64(textBytes))), is(text));
+        assertThat(EncodingUtils.base64ToString(EncodingUtils.stringToBase64(text)), is(text));
+        assertThat(EncodingUtils.stringToBase64(EncodingUtils.base64ToString(base64String)), is(base64String));
+        assertThat(EncodingUtils.toString(EncodingUtils.bytesToBase64(EncodingUtils.base64ToBytes(base64Bytes))),
+                is(base64String));
+        assertThat(EncodingUtils.toString(EncodingUtils.base64ToBytes(EncodingUtils.bytesToBase64(textBytes))),
+                is(text));
     }
 
     @Test

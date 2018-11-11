@@ -2,14 +2,17 @@ package ro.rasel.utils.criptography;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Optional;
 
 public class KeySpecUtils {
     private final String algorithm;
+
 
     public KeySpecUtils(String algorithm) {
         this.algorithm = algorithm;
@@ -26,6 +29,13 @@ public class KeySpecUtils {
         return key;
     }
 
+    public IvParameterSpec generateNewIvSpec(int blockSize) {
+        SecureRandom randomSecureRandom = new SecureRandom();
+        byte[] iv = new byte[blockSize];
+        randomSecureRandom.nextBytes(iv);
+        return new IvParameterSpec(iv);
+    }
+
     public byte[] toBytes(Key key) {
         return Optional.ofNullable(key).map(Key::getEncoded).orElse(null);
     }
@@ -39,8 +49,12 @@ public class KeySpecUtils {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         KeySpecUtils that = (KeySpecUtils) o;
         return Objects.equals(algorithm, that.algorithm);
     }

@@ -4,49 +4,48 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.*;
-import static org.junit.runners.Parameterized.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class KeySpecUtilsTest {
     private final KeySpecUtils keySpecUtils;
     private final int keySize;
 
-    public KeySpecUtilsTest(SymetricCryptographyAlgorithmEnum symetricCryptographyAlgorithmEnum) {
-        this.keySpecUtils = new KeySpecUtils(symetricCryptographyAlgorithmEnum.getAlgorithm());
-        this.keySize = symetricCryptographyAlgorithmEnum.getKeySize();
+    public KeySpecUtilsTest(EncryptionAlgorithm encryptionAlgorithm) {
+        this.keySpecUtils = new KeySpecUtils(encryptionAlgorithm.getCipherAlgorithm().getAlgorithm());
+        this.keySize = encryptionAlgorithm.getKeySize();
     }
 
     @Parameters
-    public static Collection<SymetricCryptographyAlgorithmEnum> data() {
-        return Arrays.asList(SymetricCryptographyAlgorithmEnum.values()).stream().collect(Collectors.toList());
+    public static Collection<Object[]> data() {
+        List<Object[]> data = new ArrayList<>();
+        Arrays.asList(EncryptionAlgorithm.values()).stream().filter(EncryptionAlgorithm::isSymmetric)
+                .forEach(a -> data.add(new EncryptionAlgorithm[]{a}));
+        return data;
     }
 
     @Test
     public void assertThatConversionOfKeysToBytesIsReversible() throws NoSuchAlgorithmException {
         Key key = keySpecUtils.generateNewKeySpec(keySize);
-
         byte[] keyBytes = keySpecUtils.toBytes(key);
 
-        assertThat(EncodingUtils.toString(keySpecUtils.toBytes(
-                keySpecUtils.toKey(keyBytes))), is(EncodingUtils.toString(keyBytes)));
-
+        assertThat(EncodingUtils.toString(keySpecUtils.toBytes(keySpecUtils.toKey(keyBytes))),
+                is(EncodingUtils.toString(keyBytes)));
     }
 
     @Test
-    public void assertThatEverytimeANewKeyIsGenerated()
-            throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+    public void assertThatEverytimeANewKeyIsGenerated() throws NoSuchAlgorithmException {
         Key key = keySpecUtils.generateNewKeySpec(keySize);
         Key key2 = keySpecUtils.generateNewKeySpec(keySize);
 
@@ -54,7 +53,7 @@ public class KeySpecUtilsTest {
     }
 
     @Test
-    public void assertNullsReturnNulls() throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public void assertNullsReturnNulls() {
         assertNull(keySpecUtils.toBytes(null));
         assertNull(keySpecUtils.toKey(null));
     }
