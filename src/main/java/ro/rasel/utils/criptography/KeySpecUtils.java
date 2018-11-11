@@ -13,7 +13,6 @@ import java.util.Optional;
 public class KeySpecUtils {
     private final String algorithm;
 
-
     public KeySpecUtils(String algorithm) {
         this.algorithm = algorithm;
     }
