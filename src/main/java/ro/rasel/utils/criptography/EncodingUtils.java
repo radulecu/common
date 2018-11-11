@@ -14,7 +14,6 @@ public class EncodingUtils {
 
     public static String stringToBase64(String value) {
         return Optional.ofNullable(value).map(s -> toString(Base64.getEncoder().encode(toBytes(s)))).orElse(null);
-
     }
 
     public static String base64ToString(String encoded) {

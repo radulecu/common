@@ -22,11 +22,10 @@ public class KeyPairUtilsTest {
         byte[] privateKey = rsaEncodingUtils.toBytes(keyPair.getPrivate());
         byte[] publicKey = rsaEncodingUtils.toBytes(keyPair.getPublic());
 
-        assertThat(EncodingUtils.toString(rsaEncodingUtils.toBytes(
-                rsaEncodingUtils.toPrivateKey(privateKey))), is(EncodingUtils.toString(privateKey)));
-        assertThat(EncodingUtils.toString(rsaEncodingUtils.toBytes(
-                rsaEncodingUtils.toPublicKey(publicKey))), is(EncodingUtils.toString(publicKey)));
-
+        assertThat(EncodingUtils.toString(rsaEncodingUtils.toBytes(rsaEncodingUtils.toPrivateKey(privateKey))),
+                is(EncodingUtils.toString(privateKey)));
+        assertThat(EncodingUtils.toString(rsaEncodingUtils.toBytes(rsaEncodingUtils.toPublicKey(publicKey))),
+                is(EncodingUtils.toString(publicKey)));
     }
 
     @Test
@@ -34,8 +33,7 @@ public class KeyPairUtilsTest {
         KeyPair keyPair = rsaEncodingUtils.generateNewKeyPair(2048);
         KeyPair keyPair2 = rsaEncodingUtils.generateNewKeyPair(2048);
 
-        assertThat(rsaEncodingUtils.toBytes(keyPair.getPublic()),
-                not(rsaEncodingUtils.toBytes(keyPair2.getPublic())));
+        assertThat(rsaEncodingUtils.toBytes(keyPair.getPublic()), not(rsaEncodingUtils.toBytes(keyPair2.getPublic())));
         assertThat(rsaEncodingUtils.toBytes(keyPair.getPrivate()),
                 not(rsaEncodingUtils.toBytes(keyPair2.getPrivate())));
     }
@@ -52,5 +50,4 @@ public class KeyPairUtilsTest {
             throws NoSuchAlgorithmException {
         rsaEncodingUtils.generateNewKeyPair(-1);
     }
-
 }

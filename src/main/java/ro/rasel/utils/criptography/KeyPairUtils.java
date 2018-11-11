@@ -32,8 +32,7 @@ public class KeyPairUtils {
         return Optional.ofNullable(key).map(k -> k.getEncoded()).orElse(null);
     }
 
-    public PrivateKey toPrivateKey(byte[] privateKey)
-            throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public PrivateKey toPrivateKey(byte[] privateKey) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (privateKey == null) {
             return null;
         }
@@ -42,8 +41,7 @@ public class KeyPairUtils {
         return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKey));
     }
 
-    public PublicKey toPublicKey(byte[] publicKey)
-            throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public PublicKey toPublicKey(byte[] publicKey) throws InvalidKeySpecException, NoSuchAlgorithmException {
         if (publicKey == null) {
             return null;
         }
@@ -54,8 +52,12 @@ public class KeyPairUtils {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         KeyPairUtils that = (KeyPairUtils) o;
         return Objects.equals(algorithm, that.algorithm);
     }
