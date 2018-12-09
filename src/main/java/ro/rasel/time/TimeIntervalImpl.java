@@ -1,94 +1,85 @@
 package ro.rasel.time;
 
+import java.time.Duration;
 import java.util.Objects;
+import java.util.function.LongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TimeIntervalImpl implements TimeInterval {
-    private final long totalMilliseconds;
+    private Duration duration;
     private final boolean verbose;
 
-    public TimeIntervalImpl(long totalMilliseconds) {
-        this(totalMilliseconds, false);
+    public TimeIntervalImpl(Duration duration) {
+        this(duration, false);
     }
 
-    public TimeIntervalImpl(long totalMilliseconds, boolean verbose) {
-        if (totalMilliseconds < 0) {
-            throw new IllegalArgumentException("totalMilliseconds must be positive");
-        }
-
-        this.totalMilliseconds = totalMilliseconds;
+    public TimeIntervalImpl(Duration duration, boolean verbose) {
+        this.duration = duration;
         this.verbose = verbose;
     }
 
     @Override
-    public long getTotalMilliseconds() {
-        return totalMilliseconds;
+    public Duration getDuration() {
+        return duration;
     }
 
     @Override
-    public int getMiliseconds() {
-        return (int) (totalMilliseconds % 1000);
+    public int getNanoseconds() {
+        return (int) (duration.toNanos() % 1_000_000);
+    }
+
+    @Override
+    public int getMilliseconds() {
+        return (int) (duration.toMillis() % 1000);
     }
 
     @Override
     public int getSeconds() {
-        return (int) ((totalMilliseconds / 1000) % 60);
+        return (int) (duration.getSeconds() % 60);
     }
 
     @Override
     public int getMinutes() {
-        return (int) ((totalMilliseconds / 1000 / 60) % 60);
+        return (int) (duration.toMinutes() % 60);
     }
 
     @Override
     public int getHours() {
-        return (int) ((totalMilliseconds / 1000 / 60 / 60) % 60);
+        return (int) (duration.toHours() % 24);
     }
 
     @Override
     public long getDays() {
-        return (totalMilliseconds / 1000 / 60 / 60 / 24);
-    }
-
-    private String toString(long value, String suffix) {
-        return toString(value, suffix, suffix);
-    }
-
-    private String toString(long value, String suffix, String pluralSuffix) {
-        if (value == 1) {
-            return value + suffix;
-        } else if (value > 1) {
-            return value + pluralSuffix;
-        }
-
-        return null;
-    }
-
-    private String toStringSimple() {
-        return Stream.of(
-                toString(getDays(), "d"),
-                toString(getHours(), "h"),
-                toString(getMinutes(), "m"),
-                toString(getSeconds(), "s"),
-                toString(getMiliseconds(), "ms")
-        ).filter(Objects::nonNull).collect(Collectors.joining(":"));
-    }
-
-    private String toStringVerbose() {
-        return Stream.of(
-                toString(getDays(), "day", "days"),
-                toString(getHours(), "hour", "hours"),
-                toString(getMinutes(), "minute", "minutes"),
-                toString(getSeconds(), "second", "seconds"),
-                toString(getMiliseconds(), "millisecond", "milliseconds")
-        ).filter(Objects::nonNull).collect(Collectors.joining(", "));
+        return duration.toDays();
     }
 
     @Override
     public String toString() {
-        String s = verbose ? toStringVerbose() : toStringSimple();
-        return s.isEmpty() ? "0" : s;
+        boolean verbose = this.verbose;
+        return toString(verbose);
     }
 
+    public String toString(boolean verbose) {
+        return format(verbose ? TimeFormatterImpl.VERBOSE_FORMATTER : TimeFormatterImpl.SIMPLE_FORMATTER);
+    }
+
+    public String format(TimeFormatter timeFormatter) {
+        String s = Stream.of(new String[]{format(getDays(), timeFormatter.getDaysFormatter()),
+                format(getHours(), timeFormatter.getHoursFormatter()),
+                format(getMinutes(), timeFormatter.getMinutesFormatter()),
+                format(getSeconds(), timeFormatter.getSecondsFormatter()),
+                format(getMilliseconds(), timeFormatter.getMillisecondsFormatter()),
+                format(getNanoseconds(), timeFormatter.getNanosecondsFormatter())}).
+                filter(Objects::nonNull).collect(Collectors.joining(timeFormatter.getSeparator()));
+        return s.isEmpty()?"0":s;
+    }
+
+    private static String format(long value, LongFunction<String> function) {
+        if (value == 0) {
+            return null;
+        } else {
+            return function.apply(value);
+        }
+    }
 }

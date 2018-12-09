@@ -1,9 +1,13 @@
 package ro.rasel.time;
 
-public interface TimeInterval {
-    long getTotalMilliseconds();
+import java.time.Duration;
 
-    int getMiliseconds();
+public interface TimeInterval {
+    Duration getDuration();
+
+    int getNanoseconds();
+
+    int getMilliseconds();
 
     int getSeconds();
 
