@@ -78,7 +78,7 @@ public class TimeIntervalImpl implements TimeInterval {
                 format(getMilliseconds(), timeFormatter.getFormatter(Milliseconds)),
                 format(getNanoseconds(), timeFormatter.getFormatter(Nanoseconds))}).
                 filter(Objects::nonNull).collect(Collectors.joining(timeFormatter.getSeparator()));
-        return s.isEmpty()?"0":s;
+        return s.isEmpty() ? "0" : s;
     }
 
     private static String format(long value, LongFunction<String> function) {

@@ -4,6 +4,7 @@ import java.util.function.LongFunction;
 
 public interface TimeFormatter {
     LongFunction<String> getFormatter(FormatterUnit formatterUnit);
+
     String getSeparator();
 
     enum FormatterUnit {
