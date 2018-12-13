@@ -1,57 +1,53 @@
 package ro.rasel.time;
 
+import ro.rasel.collections.MapBuilder;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.LongFunction;
+import java.util.stream.Stream;
+
+import static ro.rasel.time.TimeFormatter.FormatterUnit.Days;
+import static ro.rasel.time.TimeFormatter.FormatterUnit.Hours;
+import static ro.rasel.time.TimeFormatter.FormatterUnit.Milliseconds;
+import static ro.rasel.time.TimeFormatter.FormatterUnit.Minutes;
+import static ro.rasel.time.TimeFormatter.FormatterUnit.Nanoseconds;
+import static ro.rasel.time.TimeFormatter.FormatterUnit.Seconds;
 
 public class TimeFormatterImpl implements TimeFormatter {
-    public static final TimeFormatter SIMPLE_FORMATTER = new TimeIntervalFormatterBuilder()
-            .setDaysFormatter(value -> simpleFormat(value, "d"))
-            .setHoursFormatter(value -> simpleFormat(value, "h"))
-            .setMinutesFormatter(value -> simpleFormat(value, "m"))
-            .setSecondsFormatter(value -> simpleFormat(value, "s"))
-            .setMillisecondsFormatter(value -> simpleFormat(value, "ms"))
-            .setNanosecondsFormatter(value -> simpleFormat(value, "ns"))
-            .setSeparator(":")
-            .build();
-    public static final TimeFormatter VERBOSE_FORMATTER = new TimeIntervalFormatterBuilder()
-            .setDaysFormatter(value -> pluralFormat(value, "day", "days"))
-            .setHoursFormatter(value -> pluralFormat(value, "hour", "hours"))
-            .setMinutesFormatter(value -> pluralFormat(value, "minute", "minutes"))
-            .setSecondsFormatter(value -> pluralFormat(value, "second", "seconds"))
-            .setMillisecondsFormatter(value -> pluralFormat(value, "millisecond", "milliseconds"))
-            .setNanosecondsFormatter(value -> pluralFormat(value, "nanosecond", "nanoseconds"))
-            .setSeparator(":")
-            .build();
+    public static final TimeFormatter SIMPLE_FORMATTER = new TimeFormatterImpl(
+            MapBuilder.<FormatterUnit, LongFunction<String>>ofMap()
+                    .put(Days, value -> simpleFormat(value, "d"))
+                    .put(Hours, value -> simpleFormat(value, "h"))
+                    .put(Minutes, value -> simpleFormat(value, "m"))
+                    .put(Seconds, value -> simpleFormat(value, "s"))
+                    .put(Milliseconds, value -> simpleFormat(value, "ms"))
+                    .put(Nanoseconds, value -> simpleFormat(value, "ns"))
+                    .build(HashMap::new),
+            ":");
+    public static final TimeFormatter VERBOSE_FORMATTER = new TimeFormatterImpl(
+            MapBuilder.<FormatterUnit, LongFunction<String>>ofMap()
+                    .put(Days, value -> pluralFormat(value, "day", "days"))
+                    .put(Hours, value -> pluralFormat(value, "hour", "hours"))
+                    .put(Minutes, value -> pluralFormat(value, "minute", "minutes"))
+                    .put(Seconds, value -> pluralFormat(value, "second", "seconds"))
+                    .put(Milliseconds, value -> pluralFormat(value, "millisecond", "milliseconds"))
+                    .put(Nanoseconds, value -> pluralFormat(value, "nanosecond", "nanoseconds"))
+                    .build(HashMap::new),
+            ":");
 
-    private final LongFunction<String> daysFormatter;
-    private final LongFunction<String> hoursFormatter;
-    private final LongFunction<String> minutesFormatter;
-    private final LongFunction<String> secondsFormatter;
-    private final LongFunction<String> millisecondsFormatter;
-    private final LongFunction<String> nanosecondsFormatter;
     private final String separator;
+    private final Map<FormatterUnit, LongFunction<String>> formatterMap;
 
-    private TimeFormatterImpl(LongFunction<String> daysFormatter,
-                              LongFunction<String> hoursFormatter,
-                              LongFunction<String> minutesFormatter,
-                              LongFunction<String> secondsFormatter,
-                              LongFunction<String> millisecondsFormatter,
-                              LongFunction<String> nanosecondsFormatter,
-                              String separator) {
-        Objects.requireNonNull(daysFormatter, "daysFormatter should not be null");
-        Objects.requireNonNull(hoursFormatter, "hoursFormatter should not be null");
-        Objects.requireNonNull(minutesFormatter, "minutesFormatter should not be null");
-        Objects.requireNonNull(secondsFormatter, "secondsFormatter should not be null");
-        Objects.requireNonNull(millisecondsFormatter, "millisecondsFormatter should not be null");
-        Objects.requireNonNull(nanosecondsFormatter, "nanosecondsFormatter should not be null");
+    private TimeFormatterImpl(Map<FormatterUnit, LongFunction<String>> formatterMap, String separator) {
+        Stream.of(FormatterUnit.values()).forEach(formatterUnit -> Objects
+                .requireNonNull(formatterMap.get(formatterUnit),
+                        formatterUnit.name().toLowerCase() + " Formatter should not be null"));
         Objects.requireNonNull(separator, "separator should not be null");
 
-        this.daysFormatter = daysFormatter;
-        this.hoursFormatter = hoursFormatter;
-        this.minutesFormatter = minutesFormatter;
-        this.secondsFormatter = secondsFormatter;
-        this.millisecondsFormatter = millisecondsFormatter;
-        this.nanosecondsFormatter = nanosecondsFormatter;
+        this.formatterMap = Collections.unmodifiableMap(new HashMap<>(formatterMap));
         this.separator = separator;
     }
 
@@ -64,87 +60,12 @@ public class TimeFormatterImpl implements TimeFormatter {
     }
 
     @Override
-    public LongFunction<String> getDaysFormatter() {
-        return daysFormatter;
-    }
-
-    @Override
-    public LongFunction<String> getHoursFormatter() {
-        return hoursFormatter;
-    }
-
-    @Override
-    public LongFunction<String> getMinutesFormatter() {
-        return minutesFormatter;
-    }
-
-    @Override
-    public LongFunction<String> getSecondsFormatter() {
-        return secondsFormatter;
-    }
-
-    @Override
-    public LongFunction<String> getMillisecondsFormatter() {
-        return millisecondsFormatter;
-    }
-
-    @Override
-    public LongFunction<String> getNanosecondsFormatter() {
-        return nanosecondsFormatter;
+    public LongFunction<String> getFormatter(FormatterUnit formatterUnit) {
+        return formatterMap.get(formatterUnit);
     }
 
     @Override
     public String getSeparator() {
         return separator;
-    }
-
-    public static class TimeIntervalFormatterBuilder {
-        private LongFunction<String> daysFormatter;
-        private LongFunction<String> hoursFormatter;
-        private LongFunction<String> minutesFormatter;
-        private LongFunction<String> secondsFormatter;
-        private LongFunction<String> millisecondsFormatter;
-        private LongFunction<String> nanosecondsFormatter;
-        private String separator;
-
-        public TimeIntervalFormatterBuilder setDaysFormatter(LongFunction<String> daysFormatter) {
-            this.daysFormatter = daysFormatter;
-            return this;
-        }
-
-        public TimeIntervalFormatterBuilder setHoursFormatter(LongFunction<String> hoursFormatter) {
-            this.hoursFormatter = hoursFormatter;
-            return this;
-        }
-
-        public TimeIntervalFormatterBuilder setMinutesFormatter(LongFunction<String> minutesFormatter) {
-            this.minutesFormatter = minutesFormatter;
-            return this;
-        }
-
-        public TimeIntervalFormatterBuilder setSecondsFormatter(LongFunction<String> secondsFormatter) {
-            this.secondsFormatter = secondsFormatter;
-            return this;
-        }
-
-        public TimeIntervalFormatterBuilder setMillisecondsFormatter(LongFunction<String> millisecondsFormatter) {
-            this.millisecondsFormatter = millisecondsFormatter;
-            return this;
-        }
-
-        public TimeIntervalFormatterBuilder setNanosecondsFormatter(LongFunction<String> nanosecondsFormatter) {
-            this.nanosecondsFormatter = nanosecondsFormatter;
-            return this;
-        }
-
-        public TimeIntervalFormatterBuilder setSeparator(String separator) {
-            this.separator = separator;
-            return this;
-        }
-
-        public TimeFormatterImpl build() {
-            return new TimeFormatterImpl(daysFormatter, hoursFormatter, minutesFormatter,
-                    secondsFormatter, millisecondsFormatter, nanosecondsFormatter, separator);
-        }
     }
 }
