@@ -5,17 +5,18 @@ import org.junit.Test;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class TimeIntervalTest {
 
-    private static final int NANOS = 12345;
-    private static final int MILLIS = 25;
-    private static final int SECONDS = 5;
-    private static final int MINUTES = 7;
-    private static final int HOURS = 9;
+    private static final long NANOS = 12345;
+    private static final long MILLIS = 25;
+    private static final long SECONDS = 5;
+    private static final long MINUTES = 7;
+    private static final long HOURS = 9;
     private static final long DAYS = 3;
 
     private static final Duration DURATION = Duration.ofNanos(NANOS)
@@ -29,19 +30,19 @@ public class TimeIntervalTest {
 
     @Test
     public void testGetters() {
-        ITimeInterval timeInterval = new TimeInterval(DURATION);
-        assertThat(timeInterval.getNanoseconds(), is(NANOS));
-        assertThat(timeInterval.getMilliseconds(), is(MILLIS));
-        assertThat(timeInterval.getDays(), is(DAYS));
-        assertThat(timeInterval.getMinutes(), is(MINUTES));
-        assertThat(timeInterval.getHours(), is(HOURS));
-        assertThat(timeInterval.getSeconds(), is(SECONDS));
+        ITimeInterval<Duration, TimeUnit> timeInterval = new TimeInterval(DURATION);
+        assertThat(timeInterval.get(TimeUnit.NANOSECONDS), is(NANOS));
+        assertThat(timeInterval.get(TimeUnit.MILLISECONDS), is(MILLIS));
+        assertThat(timeInterval.get(TimeUnit.DAYS), is(DAYS));
+        assertThat(timeInterval.get(TimeUnit.MINUTES), is(MINUTES));
+        assertThat(timeInterval.get(TimeUnit.HOURS), is(HOURS));
+        assertThat(timeInterval.get(TimeUnit.SECONDS), is(SECONDS));
     }
 
     @Test
     public void testToString() {
-        ITimeInterval timeIntervalNonVerbose = new TimeInterval(DURATION, false);
-        ITimeInterval timeIntervalVerbose = new TimeInterval(DURATION, true);
+        ITimeInterval<Duration,TimeUnit> timeIntervalNonVerbose = new TimeInterval(DURATION, false);
+        ITimeInterval<Duration,TimeUnit> timeIntervalVerbose = new TimeInterval(DURATION, true);
 
         assertThat(timeIntervalNonVerbose.toString(), is(DURATION_AS_STRING));
         assertThat(timeIntervalVerbose.toString(), is(DURATION_AS_STRING_VERBOSE));
@@ -49,8 +50,8 @@ public class TimeIntervalTest {
 
     @Test
     public void testZeroValues() {
-        ITimeInterval timeIntervalNonVerbose = new TimeInterval(Duration.ofSeconds(0), false);
-        ITimeInterval timeIntervalVerbose = new TimeInterval(Duration.ofSeconds(0), true);
+        ITimeInterval<Duration,TimeUnit> timeIntervalNonVerbose = new TimeInterval(Duration.ofSeconds(0), false);
+        ITimeInterval<Duration,TimeUnit> timeIntervalVerbose = new TimeInterval(Duration.ofSeconds(0), true);
 
         assertThat(timeIntervalNonVerbose.toString(), is("0"));
         assertThat(timeIntervalVerbose.toString(), is("0"));
@@ -62,8 +63,8 @@ public class TimeIntervalTest {
                 .plusMillis(1).plusSeconds(1).plusMinutes(1).plusHours(1)
                 .plusDays(1);
 
-        ITimeInterval timeIntervalNonVerbose = new TimeInterval(durationOfOnes, false);
-        ITimeInterval timeIntervalVerbose = new TimeInterval(durationOfOnes, true);
+        ITimeInterval<Duration,TimeUnit> timeIntervalNonVerbose = new TimeInterval(durationOfOnes, false);
+        ITimeInterval<Duration,TimeUnit> timeIntervalVerbose = new TimeInterval(durationOfOnes, true);
 
         assertThat(timeIntervalNonVerbose.toString(), is("1d:1h:1m:1s:1ms:1ns"));
         assertThat(timeIntervalVerbose.toString(), is("1 day:1 hour:1 minute:1 second:1 millisecond:1 nanosecond"));
@@ -84,15 +85,16 @@ public class TimeIntervalTest {
 
         duration = duration.plusHours(HOURS);
         expectedResults.put(duration, HOURS + "h" + ":" + MINUTES + "m" + ":" + NANOS + "ns");
-        expectedVerboseResults.put(duration, HOURS + " hours" + ":" + MINUTES + " minutes" + ":" + NANOS + " nanoseconds");
+        expectedVerboseResults
+                .put(duration, HOURS + " hours" + ":" + MINUTES + " minutes" + ":" + NANOS + " nanoseconds");
 
         for (Map.Entry<Duration, String> expectedResult : expectedResults.entrySet()) {
-            ITimeInterval timeIntervalVerbose = new TimeInterval(expectedResult.getKey(), false);
+            ITimeInterval<Duration,TimeUnit> timeIntervalVerbose = new TimeInterval(expectedResult.getKey(), false);
             assertThat(timeIntervalVerbose.toString(), is(expectedResult.getValue()));
         }
 
         for (Map.Entry<Duration, String> expectedResult : expectedVerboseResults.entrySet()) {
-            ITimeInterval timeIntervalVerbose = new TimeInterval(expectedResult.getKey(), true);
+            ITimeInterval<Duration,TimeUnit> timeIntervalVerbose = new TimeInterval(expectedResult.getKey(), true);
             assertThat(timeIntervalVerbose.toString(), is(expectedResult.getValue()));
         }
     }
