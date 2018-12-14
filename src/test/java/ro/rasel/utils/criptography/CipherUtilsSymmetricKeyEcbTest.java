@@ -11,9 +11,10 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
@@ -35,12 +36,10 @@ public class CipherUtilsSymmetricKeyEcbTest {
 
     @Parameters
     public static Collection<Object[]> data() {
-        Collection<Object[]> result = new ArrayList<>();
-        Arrays.asList("test", "(teststring)*(^*&787867", null, "", "\u4321\u3395\u2121").stream().forEach(
-                t -> Arrays.asList(EncryptionAlgorithm.values()).stream().filter(EncryptionAlgorithm::isSymmetric)
+        return Stream.of("test", "(teststring)*(^*&787867", null, "", "\u4321\u3395\u2121").flatMap(
+                t -> Arrays.stream(EncryptionAlgorithm.values()).filter(EncryptionAlgorithm::isSymmetric)
                         .filter(a -> ECB.equals(a.getCipherAlgorithm().getCipherMode()))
-                        .forEach(a -> result.add(new Object[]{t, a})));
-        return result;
+                        .map(a -> new Object[]{t, a})).collect(Collectors.toList());
     }
 
     @Test

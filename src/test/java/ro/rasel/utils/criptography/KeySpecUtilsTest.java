@@ -6,10 +6,9 @@ import org.junit.runners.Parameterized;
 
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
@@ -29,10 +28,8 @@ public class KeySpecUtilsTest {
 
     @Parameters
     public static Collection<Object[]> data() {
-        List<Object[]> data = new ArrayList<>();
-        Arrays.asList(EncryptionAlgorithm.values()).stream().filter(EncryptionAlgorithm::isSymmetric)
-                .forEach(a -> data.add(new EncryptionAlgorithm[]{a}));
-        return data;
+        return Arrays.stream(EncryptionAlgorithm.values()).filter(EncryptionAlgorithm::isSymmetric)
+                .map(a -> new EncryptionAlgorithm[]{a}).collect(Collectors.toList());
     }
 
     @Test
