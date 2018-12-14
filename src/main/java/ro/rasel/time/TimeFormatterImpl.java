@@ -6,43 +6,44 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.LongFunction;
 import java.util.stream.Stream;
 
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Days;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Hours;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Milliseconds;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Minutes;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Nanoseconds;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Seconds;
+import static java.util.concurrent.TimeUnit.DAYS;
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TimeFormatterImpl implements TimeFormatter {
     public static final TimeFormatter SIMPLE_FORMATTER = new TimeFormatterImpl(
-            MapBuilder.<FormatterUnit, LongFunction<String>>ofMap()
-                    .put(Days, value -> simpleFormat(value, "d"))
-                    .put(Hours, value -> simpleFormat(value, "h"))
-                    .put(Minutes, value -> simpleFormat(value, "m"))
-                    .put(Seconds, value -> simpleFormat(value, "s"))
-                    .put(Milliseconds, value -> simpleFormat(value, "ms"))
-                    .put(Nanoseconds, value -> simpleFormat(value, "ns"))
+            MapBuilder.<TimeUnit, LongFunction<String>>ofMap()
+                    .put(DAYS, value -> simpleFormat(value, "d"))
+                    .put(HOURS, value -> simpleFormat(value, "h"))
+                    .put(MINUTES, value -> simpleFormat(value, "m"))
+                    .put(SECONDS, value -> simpleFormat(value, "s"))
+                    .put(MILLISECONDS, value -> simpleFormat(value, "ms"))
+                    .put(NANOSECONDS, value -> simpleFormat(value, "ns"))
                     .build(HashMap::new),
             ":");
     public static final TimeFormatter VERBOSE_FORMATTER = new TimeFormatterImpl(
-            MapBuilder.<FormatterUnit, LongFunction<String>>ofMap()
-                    .put(Days, value -> pluralFormat(value, "day", "days"))
-                    .put(Hours, value -> pluralFormat(value, "hour", "hours"))
-                    .put(Minutes, value -> pluralFormat(value, "minute", "minutes"))
-                    .put(Seconds, value -> pluralFormat(value, "second", "seconds"))
-                    .put(Milliseconds, value -> pluralFormat(value, "millisecond", "milliseconds"))
-                    .put(Nanoseconds, value -> pluralFormat(value, "nanosecond", "nanoseconds"))
+            MapBuilder.<TimeUnit, LongFunction<String>>ofMap()
+                    .put(DAYS, value -> pluralFormat(value, "day", "days"))
+                    .put(HOURS, value -> pluralFormat(value, "hour", "hours"))
+                    .put(MINUTES, value -> pluralFormat(value, "minute", "minutes"))
+                    .put(SECONDS, value -> pluralFormat(value, "second", "seconds"))
+                    .put(MILLISECONDS, value -> pluralFormat(value, "millisecond", "milliseconds"))
+                    .put(NANOSECONDS, value -> pluralFormat(value, "nanosecond", "nanoseconds"))
                     .build(HashMap::new),
             ":");
 
     private final String separator;
-    private final Map<FormatterUnit, LongFunction<String>> formatterMap;
+    private final Map<TimeUnit, LongFunction<String>> formatterMap;
 
-    private TimeFormatterImpl(Map<FormatterUnit, LongFunction<String>> formatterMap, String separator) {
-        Stream.of(FormatterUnit.values()).forEach(formatterUnit -> Objects
+    private TimeFormatterImpl(Map<TimeUnit, LongFunction<String>> formatterMap, String separator) {
+        Stream.of(DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS, NANOSECONDS).forEach(formatterUnit -> Objects
                 .requireNonNull(formatterMap.get(formatterUnit),
                         formatterUnit.name().toLowerCase() + " Formatter should not be null"));
         Objects.requireNonNull(separator, "separator should not be null");
@@ -60,7 +61,7 @@ public class TimeFormatterImpl implements TimeFormatter {
     }
 
     @Override
-    public LongFunction<String> getFormatter(FormatterUnit formatterUnit) {
+    public LongFunction<String> getFormatter(TimeUnit formatterUnit) {
         return formatterMap.get(formatterUnit);
     }
 

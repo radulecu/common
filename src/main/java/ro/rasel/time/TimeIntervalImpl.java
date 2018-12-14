@@ -6,12 +6,12 @@ import java.util.function.LongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Days;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Hours;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Milliseconds;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Minutes;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Nanoseconds;
-import static ro.rasel.time.TimeFormatter.FormatterUnit.Seconds;
+import static java.util.concurrent.TimeUnit.DAYS;
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TimeIntervalImpl implements TimeInterval {
     private Duration duration;
@@ -71,12 +71,12 @@ public class TimeIntervalImpl implements TimeInterval {
     }
 
     public String format(TimeFormatter timeFormatter) {
-        String s = Stream.of(new String[]{format(getDays(), timeFormatter.getFormatter(Days)),
-                format(getHours(), timeFormatter.getFormatter(Hours)),
-                format(getMinutes(), timeFormatter.getFormatter(Minutes)),
-                format(getSeconds(), timeFormatter.getFormatter(Seconds)),
-                format(getMilliseconds(), timeFormatter.getFormatter(Milliseconds)),
-                format(getNanoseconds(), timeFormatter.getFormatter(Nanoseconds))}).
+        String s = Stream.of(new String[]{format(getDays(), timeFormatter.getFormatter(DAYS)),
+                format(getHours(), timeFormatter.getFormatter(HOURS)),
+                format(getMinutes(), timeFormatter.getFormatter(MINUTES)),
+                format(getSeconds(), timeFormatter.getFormatter(SECONDS)),
+                format(getMilliseconds(), timeFormatter.getFormatter(MILLISECONDS)),
+                format(getNanoseconds(), timeFormatter.getFormatter(NANOSECONDS))}).
                 filter(Objects::nonNull).collect(Collectors.joining(timeFormatter.getSeparator()));
         return s.isEmpty() ? "0" : s;
     }
