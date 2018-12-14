@@ -1,21 +1,91 @@
 package ro.rasel.time;
 
 import java.time.Duration;
+import java.util.Objects;
+import java.util.function.LongFunction;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public interface TimeInterval {
-    Duration getDuration();
+import static java.util.concurrent.TimeUnit.DAYS;
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
-    int getNanoseconds();
+public class TimeInterval implements ITimeInterval {
+    private Duration duration;
+    private final boolean verbose;
 
-    int getMilliseconds();
+    public TimeInterval(Duration duration) {
+        this(duration, false);
+    }
 
-    int getSeconds();
+    public TimeInterval(Duration duration, boolean verbose) {
+        this.duration = duration;
+        this.verbose = verbose;
+    }
 
-    int getMinutes();
+    @Override
+    public Duration getDuration() {
+        return duration;
+    }
 
-    int getHours();
+    @Override
+    public int getNanoseconds() {
+        return (int) (duration.toNanos() % 1_000_000);
+    }
 
-    long getDays();
+    @Override
+    public int getMilliseconds() {
+        return (int) (duration.toMillis() % 1000);
+    }
 
-    String toString();
+    @Override
+    public int getSeconds() {
+        return (int) (duration.getSeconds() % 60);
+    }
+
+    @Override
+    public int getMinutes() {
+        return (int) (duration.toMinutes() % 60);
+    }
+
+    @Override
+    public int getHours() {
+        return (int) (duration.toHours() % 24);
+    }
+
+    @Override
+    public long getDays() {
+        return duration.toDays();
+    }
+
+    @Override
+    public String toString() {
+        return toString(this.verbose);
+    }
+
+    public String toString(boolean verbose) {
+        return format(verbose ? TimeFormatter.VERBOSE_FORMATTER : TimeFormatter.SIMPLE_FORMATTER);
+    }
+
+    public String format(ITimeFormatter timeFormatter) {
+        String s = Stream.of(new String[]{format(getDays(), timeFormatter.getFormatter(DAYS)),
+                format(getHours(), timeFormatter.getFormatter(HOURS)),
+                format(getMinutes(), timeFormatter.getFormatter(MINUTES)),
+                format(getSeconds(), timeFormatter.getFormatter(SECONDS)),
+                format(getMilliseconds(), timeFormatter.getFormatter(MILLISECONDS)),
+                format(getNanoseconds(), timeFormatter.getFormatter(NANOSECONDS))}).
+                filter(Objects::nonNull).collect(Collectors.joining(timeFormatter.getSeparator()));
+        return s.isEmpty() ? "0" : s;
+    }
+
+    private static String format(long value, LongFunction<String> function) {
+        if (value == 0) {
+            return null;
+        } else {
+            return function.apply(value);
+        }
+    }
 }
