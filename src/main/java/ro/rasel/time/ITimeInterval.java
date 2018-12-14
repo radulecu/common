@@ -1,9 +1,7 @@
 package ro.rasel.time;
 
-import java.time.Duration;
-
-public interface ITimeInterval {
-    Duration getDuration();
+public interface ITimeInterval<T> {
+    T getTime();
 
     int getNanoseconds();
 

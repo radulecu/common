@@ -1,10 +1,9 @@
 package ro.rasel.time;
 
-import java.util.concurrent.TimeUnit;
 import java.util.function.LongFunction;
 
-public interface ITimeFormatter {
-    LongFunction<String> getFormatter(TimeUnit TimeUnit);
+public interface ITimeFormatter<T> {
+    LongFunction<String> getFormatter(T t);
 
     String getSeparator();
 }

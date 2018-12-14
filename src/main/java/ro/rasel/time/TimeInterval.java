@@ -2,6 +2,7 @@ package ro.rasel.time;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.LongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,7 +14,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class TimeInterval implements ITimeInterval {
+public class TimeInterval implements ITimeInterval<Duration> {
     private Duration duration;
     private final boolean verbose;
 
@@ -27,7 +28,7 @@ public class TimeInterval implements ITimeInterval {
     }
 
     @Override
-    public Duration getDuration() {
+    public Duration getTime() {
         return duration;
     }
 
@@ -70,7 +71,7 @@ public class TimeInterval implements ITimeInterval {
         return format(verbose ? TimeFormatter.VERBOSE_FORMATTER : TimeFormatter.SIMPLE_FORMATTER);
     }
 
-    public String format(ITimeFormatter timeFormatter) {
+    public String format(ITimeFormatter<TimeUnit> timeFormatter) {
         String s = Stream.of(new String[]{format(getDays(), timeFormatter.getFormatter(DAYS)),
                 format(getHours(), timeFormatter.getFormatter(HOURS)),
                 format(getMinutes(), timeFormatter.getFormatter(MINUTES)),

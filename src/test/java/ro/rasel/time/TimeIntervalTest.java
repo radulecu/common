@@ -24,7 +24,7 @@ public class TimeIntervalTest {
     private static final String DURATION_AS_STRING =
             String.format("%dd:%sh:%sm:%ss:%sms:%sns", DAYS, HOURS, MINUTES, SECONDS, MILLIS, NANOS);
     private static final String DURATION_AS_STRING_VERBOSE =
-            String.format("%ddays:%shours:%sminutes:%sseconds:%smilliseconds:%snanoseconds", DAYS, HOURS, MINUTES,
+            String.format("%d days:%s hours:%s minutes:%s seconds:%s milliseconds:%s nanoseconds", DAYS, HOURS, MINUTES,
                     SECONDS, MILLIS, NANOS);
 
     @Test
@@ -66,7 +66,7 @@ public class TimeIntervalTest {
         ITimeInterval timeIntervalVerbose = new TimeInterval(durationOfOnes, true);
 
         assertThat(timeIntervalNonVerbose.toString(), is("1d:1h:1m:1s:1ms:1ns"));
-        assertThat(timeIntervalVerbose.toString(), is("1day:1hour:1minute:1second:1millisecond:1nanosecond"));
+        assertThat(timeIntervalVerbose.toString(), is("1 day:1 hour:1 minute:1 second:1 millisecond:1 nanosecond"));
     }
 
     @Test
@@ -76,15 +76,15 @@ public class TimeIntervalTest {
 
         Duration duration = Duration.ofNanos(NANOS);
         expectedResults.put(duration, NANOS + "ns");
-        expectedVerboseResults.put(duration, NANOS + "nanoseconds");
+        expectedVerboseResults.put(duration, NANOS + " nanoseconds");
 
         duration = duration.plusMinutes(MINUTES);
         expectedResults.put(duration, MINUTES + "m" + ":" + NANOS + "ns");
-        expectedVerboseResults.put(duration, MINUTES + "minutes" + ":" + NANOS + "nanoseconds");
+        expectedVerboseResults.put(duration, MINUTES + " minutes" + ":" + NANOS + " nanoseconds");
 
         duration = duration.plusHours(HOURS);
         expectedResults.put(duration, HOURS + "h" + ":" + MINUTES + "m" + ":" + NANOS + "ns");
-        expectedVerboseResults.put(duration, HOURS + "hours" + ":" + MINUTES + "minutes" + ":" + NANOS + "nanoseconds");
+        expectedVerboseResults.put(duration, HOURS + " hours" + ":" + MINUTES + " minutes" + ":" + NANOS + " nanoseconds");
 
         for (Map.Entry<Duration, String> expectedResult : expectedResults.entrySet()) {
             ITimeInterval timeIntervalVerbose = new TimeInterval(expectedResult.getKey(), false);

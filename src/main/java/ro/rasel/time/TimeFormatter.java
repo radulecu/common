@@ -17,8 +17,8 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class TimeFormatter implements ITimeFormatter {
-    public static final ITimeFormatter SIMPLE_FORMATTER = new TimeFormatter(
+public class TimeFormatter implements ITimeFormatter<TimeUnit> {
+    public static final ITimeFormatter<TimeUnit> SIMPLE_FORMATTER = new TimeFormatter(
             MapBuilder.<TimeUnit, LongFunction<String>>ofMap()
                     .put(DAYS, value -> simpleFormat(value, "d"))
                     .put(HOURS, value -> simpleFormat(value, "h"))
@@ -28,14 +28,14 @@ public class TimeFormatter implements ITimeFormatter {
                     .put(NANOSECONDS, value -> simpleFormat(value, "ns"))
                     .build(HashMap::new),
             ":");
-    public static final ITimeFormatter VERBOSE_FORMATTER = new TimeFormatter(
+    public static final ITimeFormatter<TimeUnit> VERBOSE_FORMATTER = new TimeFormatter(
             MapBuilder.<TimeUnit, LongFunction<String>>ofMap()
-                    .put(DAYS, value -> pluralFormat(value, "day", "days"))
-                    .put(HOURS, value -> pluralFormat(value, "hour", "hours"))
-                    .put(MINUTES, value -> pluralFormat(value, "minute", "minutes"))
-                    .put(SECONDS, value -> pluralFormat(value, "second", "seconds"))
-                    .put(MILLISECONDS, value -> pluralFormat(value, "millisecond", "milliseconds"))
-                    .put(NANOSECONDS, value -> pluralFormat(value, "nanosecond", "nanoseconds"))
+                    .put(DAYS, value -> pluralFormat(value, " day", " days"))
+                    .put(HOURS, value -> pluralFormat(value, " hour", " hours"))
+                    .put(MINUTES, value -> pluralFormat(value, " minute", " minutes"))
+                    .put(SECONDS, value -> pluralFormat(value, " second", " seconds"))
+                    .put(MILLISECONDS, value -> pluralFormat(value, " millisecond", " milliseconds"))
+                    .put(NANOSECONDS, value -> pluralFormat(value, " nanosecond", " nanoseconds"))
                     .build(HashMap::new),
             ":");
 
@@ -52,17 +52,17 @@ public class TimeFormatter implements ITimeFormatter {
         this.separator = separator;
     }
 
-    public static String simpleFormat(long value, String suffix) {
-        return pluralFormat(value, suffix, suffix);
+    public static String simpleFormat(long value, String unit) {
+        return pluralFormat(value, unit, unit);
     }
 
-    public static String pluralFormat(long value, String suffix, String pluralSuffix) {
-        return value + (value == 1 ? suffix : pluralSuffix);
+    public static String pluralFormat(long value, String unit, String pluralUnit) {
+        return value + (value == 1 ? unit : pluralUnit);
     }
 
     @Override
-    public LongFunction<String> getFormatter(TimeUnit formatterUnit) {
-        return formatterMap.get(formatterUnit);
+    public LongFunction<String> getFormatter(TimeUnit timeUnit) {
+        return formatterMap.get(timeUnit);
     }
 
     @Override
