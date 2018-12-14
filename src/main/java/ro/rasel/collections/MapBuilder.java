@@ -8,9 +8,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MapBuilder<K, V> {
+    private final Supplier<Map<K, V>> supplier;
     private final Map<K, V> map;
 
     private MapBuilder(Supplier<Map<K, V>> supplier) {
+        this.supplier = supplier;
         this.map = supplier.get();
     }
 
@@ -38,6 +40,19 @@ public class MapBuilder<K, V> {
     }
 
     /**
+     * When you want any map {@link Map} or an ordered one you can simply use this method instead of {@link MapBuilder#build()}.
+     *
+     * @return an immutable map containing the elements provided to the {@link MapBuilder}
+     */
+    public Map<K, V> build() {
+        return build(map -> {
+            Map<K, V> newMap = supplier.get();
+            newMap.putAll(map);
+            return Collections.unmodifiableMap(newMap);
+        });
+    }
+
+    /**
      * While {@link MapBuilder} has the purpose to help creating a new {@link Map} or any subtype by using the builder
      * pattern the client of the method will have to actually create it himself by providing a function that should be
      * used for bot creation of the new {@link Map} and copying the content.
@@ -59,7 +74,7 @@ public class MapBuilder<K, V> {
      *  stream.map(Object::toString).collect(Collectors.joining(", "));} </pre>
      *
      * @param function
-     * @param <R>
+     * @param <S> type of map
      * @return
      */
     public <S> S build(Function<Map<K, V>, ? extends S> function) {

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -47,14 +48,16 @@ public class MapBuilderTest {
                         .put(4, "Four")
                         .put(3, "Three");
 
-        Map<Integer, String> linkedHashMap = orderedMapBuilder.build(LinkedHashMap::new);
-        ArrayList<Integer> integers = new ArrayList<>(linkedHashMap.keySet());
-        assertThat(integers.get(0), is(2));
-        assertThat(integers.get(1), is(1));
-        assertThat(integers.get(2), is(5));
-        assertThat(integers.get(3), is(4));
-        assertThat(integers.get(4), is(3));
-
+        Stream.of(orderedMapBuilder.build(), orderedMapBuilder.build(LinkedHashMap::new))
+                .forEach(map -> {
+                            ArrayList<Integer> integers = new ArrayList<>(map.keySet());
+                            assertThat(integers.get(0), is(2));
+                            assertThat(integers.get(1), is(1));
+                            assertThat(integers.get(2), is(5));
+                            assertThat(integers.get(3), is(4));
+                            assertThat(integers.get(4), is(3));
+                        }
+                );
     }
 
     @Test(expected = UnsupportedOperationException.class)
