@@ -3,31 +3,31 @@ package ro.rasel.time;
 import ro.rasel.collections.MapBuilder;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.function.LongFunction;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 
-import static java.util.concurrent.TimeUnit.DAYS;
-import static java.util.concurrent.TimeUnit.HOURS;
-import static java.util.concurrent.TimeUnit.MICROSECONDS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MICROS;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.time.temporal.ChronoUnit.MINUTES;
+import static java.time.temporal.ChronoUnit.NANOS;
+import static java.time.temporal.ChronoUnit.SECONDS;
 
-public class TimeInterval implements ITimeInterval<Duration, TimeUnit> {
-    private static final Map<TimeUnit, ToLongFunction<Duration>> TIME_PROVIDER =
-            MapBuilder.<TimeUnit, ToLongFunction<Duration>>ofOrderedMap()
+public class TimeInterval implements ITimeInterval<Duration, ChronoUnit> {
+    private static final Map<ChronoUnit, ToLongFunction<Duration>> TIME_PROVIDER =
+            MapBuilder.<ChronoUnit, ToLongFunction<Duration>>ofOrderedMap()
                     .put(DAYS, Duration::toDays)
                     .put(HOURS, duration -> duration.toHours() % 24)
                     .put(MINUTES, duration -> duration.toMinutes() % 60)
                     .put(SECONDS, duration -> duration.getSeconds() % 60)
-                    .put(MILLISECONDS, duration -> duration.toMillis() % 1000)
-                    .put(MICROSECONDS, duration -> duration.toNanos() / 1000 % 1000)
-                    .put(NANOSECONDS, duration -> duration.toNanos() % 1000)
+                    .put(MILLIS, duration -> duration.toMillis() % 1000)
+                    .put(MICROS, duration -> duration.toNanos() / 1000 % 1000)
+                    .put(NANOS, duration -> duration.toNanos() % 1000)
                     .build();
     private Duration duration;
     private final boolean verbose;
@@ -46,8 +46,8 @@ public class TimeInterval implements ITimeInterval<Duration, TimeUnit> {
         return duration;
     }
 
-    public long get(TimeUnit timeUnit) {
-        return TIME_PROVIDER.get(timeUnit).applyAsLong(getTime());
+    public long get(ChronoUnit unit) {
+        return TIME_PROVIDER.get(unit).applyAsLong(getTime());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TimeInterval implements ITimeInterval<Duration, TimeUnit> {
         return format(verbose ? TimeFormatter.VERBOSE_FORMATTER : TimeFormatter.SIMPLE_FORMATTER);
     }
 
-    public String format(ITimeFormatter<TimeUnit> timeFormatter) {
+    public String format(ITimeFormatter<ChronoUnit> timeFormatter) {
         String s = TIME_PROVIDER.keySet().stream()
                 .map(value -> format(get(value), timeFormatter.getFormatter(value)))
                 .filter(Objects::nonNull).collect(Collectors.joining(timeFormatter.getSeparator()));

@@ -2,62 +2,58 @@ package ro.rasel.time;
 
 import ro.rasel.collections.MapBuilder;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.function.LongFunction;
-import java.util.stream.Stream;
 
-import static java.util.concurrent.TimeUnit.DAYS;
-import static java.util.concurrent.TimeUnit.HOURS;
-import static java.util.concurrent.TimeUnit.MICROSECONDS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MICROS;
+import static java.time.temporal.ChronoUnit.MILLIS;
+import static java.time.temporal.ChronoUnit.MINUTES;
+import static java.time.temporal.ChronoUnit.NANOS;
+import static java.time.temporal.ChronoUnit.SECONDS;
 
-public class TimeFormatter implements ITimeFormatter<TimeUnit> {
-    public static final ITimeFormatter<TimeUnit> SIMPLE_FORMATTER = new TimeFormatter(
-            MapBuilder.<TimeUnit, LongFunction<String>>ofMap()
+public class TimeFormatter implements ITimeFormatter<ChronoUnit> {
+    public static final ITimeFormatter<ChronoUnit> SIMPLE_FORMATTER = new TimeFormatter(
+            MapBuilder.<ChronoUnit, LongFunction<String>>ofMap()
                     .put(DAYS, value -> simpleFormat(value, "d"))
                     .put(HOURS, value -> simpleFormat(value, "h"))
                     .put(MINUTES, value -> simpleFormat(value, "m"))
                     .put(SECONDS, value -> simpleFormat(value, "s"))
-                    .put(MILLISECONDS, value -> simpleFormat(value, "ms"))
-                    .put(MICROSECONDS, value -> simpleFormat(value, "us"))
-                    .put(NANOSECONDS, value -> simpleFormat(value, "ns"))
+                    .put(MILLIS, value -> simpleFormat(value, "ms"))
+                    .put(MICROS, value -> simpleFormat(value, "us"))
+                    .put(NANOS, value -> simpleFormat(value, "ns"))
                     .build(),
             ":");
-    public static final ITimeFormatter<TimeUnit> VERBOSE_FORMATTER = new TimeFormatter(
-            MapBuilder.<TimeUnit, LongFunction<String>>ofMap()
+    public static final ITimeFormatter<ChronoUnit> VERBOSE_FORMATTER = new TimeFormatter(
+            MapBuilder.<ChronoUnit, LongFunction<String>>ofMap()
                     .put(DAYS, value -> pluralFormat(value, " day", " days"))
                     .put(HOURS, value -> pluralFormat(value, " hour", " hours"))
                     .put(MINUTES, value -> pluralFormat(value, " minute", " minutes"))
                     .put(SECONDS, value -> pluralFormat(value, " second", " seconds"))
-                    .put(MILLISECONDS, value -> pluralFormat(value, " millisecond", " milliseconds"))
-                    .put(MICROSECONDS, value -> pluralFormat(value, " microsecond", " microseconds"))
-                    .put(NANOSECONDS, value -> pluralFormat(value, " nanosecond", " nanoseconds"))
+                    .put(MILLIS, value -> pluralFormat(value, " millisecond", " milliseconds"))
+                    .put(MICROS, value -> pluralFormat(value, " microsecond", " microseconds"))
+                    .put(NANOS, value -> pluralFormat(value, " nanosecond", " nanoseconds"))
                     .build(),
             ":");
 
     private final String separator;
-    private final Map<TimeUnit, LongFunction<String>> formatterMap;
+    private final Map<ChronoUnit, LongFunction<String>> formatterMap;
 
-    public TimeFormatter(Map<TimeUnit, LongFunction<String>> formatterMap, String separator) {
-        Stream.of(TimeUnit.values()).forEach(formatterUnit -> Objects
-                .requireNonNull(formatterMap.get(formatterUnit),
-                        formatterUnit.name().toLowerCase() + " Formatter should not be null"));
+    public TimeFormatter(Map<ChronoUnit, LongFunction<String>> formatterMap, String separator) {
+        Objects.requireNonNull(formatterMap, "formatterMap should not be null");
         Objects.requireNonNull(separator, "separator should not be null");
 
-        this.formatterMap = Collections.unmodifiableMap(new HashMap<>(formatterMap));
+        this.formatterMap = Collections.unmodifiableMap(formatterMap);
         this.separator = separator;
     }
 
     @Override
-    public LongFunction<String> getFormatter(TimeUnit timeUnit) {
-        return formatterMap.get(timeUnit);
+    public LongFunction<String> getFormatter(ChronoUnit chronoUnit) {
+        return formatterMap.get(chronoUnit);
     }
 
     @Override
