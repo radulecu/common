@@ -17,10 +17,14 @@ public class CipherAlgorithm implements ICipherAlgorithm {
     public static final CipherAlgorithm DESEDE_CBC_PKCS5 = new CipherAlgorithm("DESede", CBC, PKCS5Padding);
 
     private final String algorithm;
-    private final CipherMode cipherMode;
-    private final CipherPadding padding;
+    private final String cipherMode;
+    private final String padding;
 
     public CipherAlgorithm(String algorithm, CipherMode cipherMode, CipherPadding padding) {
+        this(algorithm, cipherMode.toString(), padding.toString());
+    }
+
+    public CipherAlgorithm(String algorithm, String cipherMode, String padding) {
         this.algorithm = algorithm;
         this.cipherMode = cipherMode;
         this.padding = padding;
@@ -32,12 +36,12 @@ public class CipherAlgorithm implements ICipherAlgorithm {
     }
 
     @Override
-    public CipherMode getCipherMode() {
+    public String getCipherMode() {
         return cipherMode;
     }
 
     @Override
-    public CipherPadding getPadding() {
+    public String getPadding() {
         return padding;
     }
 
