@@ -38,7 +38,7 @@ public class CipherUtilsAsymmetricKeyTest {
     }
 
     @Test
-    public void assertThatEncriptionOfBytesIsReversible()
+    public void assertThatEncryptionOfBytesIsReversible()
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
             NoSuchPaddingException {
         KeyPair keyPair = keyPairUtils.generateNewKeyPair(2048);

@@ -80,7 +80,8 @@ public class PeriodIntervalTest {
                 .put(duration, YEARS + " years" + ":" + MONTHS + " months" + ":" + DAYS + " days");
 
         for (Map.Entry<Period, String> expectedResult : expectedResults.entrySet()) {
-            ITimeFormatter<Period, ChronoUnit> timeFormatterVerbose = new PeriodInterval(expectedResult.getKey(), false);
+            ITimeFormatter<Period, ChronoUnit> timeFormatterVerbose =
+                    new PeriodInterval(expectedResult.getKey(), false);
             assertThat(timeFormatterVerbose.toString(), is(expectedResult.getValue()));
         }
 
@@ -91,19 +92,18 @@ public class PeriodIntervalTest {
     }
 
     @Test
-    public void testPeriodNormalised(){
+    public void testPeriodNormalised() {
         Period period = Period.of(YEARS, MONTHS + 24, DAYS);
-        ITimeFormatter<Period,ChronoUnit> timeFormatter=new PeriodInterval(period);
-        ITimeFormatter<Period,ChronoUnit> timeFormatterNormalised=new PeriodInterval(period.normalized());
+        ITimeFormatter<Period, ChronoUnit> timeFormatter = new PeriodInterval(period);
+        ITimeFormatter<Period, ChronoUnit> timeFormatterNormalised = new PeriodInterval(period.normalized());
 
         assertThat(timeFormatter.getAsInt(ChronoUnit.YEARS), is(YEARS));
-        assertThat(timeFormatter.getAsInt(ChronoUnit.MONTHS), is(MONTHS+24));
+        assertThat(timeFormatter.getAsInt(ChronoUnit.MONTHS), is(MONTHS + 24));
         assertThat(timeFormatter.getAsInt(ChronoUnit.DAYS), is(DAYS));
 
-        assertThat(timeFormatterNormalised.getAsInt(ChronoUnit.YEARS), is(YEARS+2));
+        assertThat(timeFormatterNormalised.getAsInt(ChronoUnit.YEARS), is(YEARS + 2));
         assertThat(timeFormatterNormalised.getAsInt(ChronoUnit.MONTHS), is(MONTHS));
         assertThat(timeFormatterNormalised.getAsInt(ChronoUnit.DAYS), is(DAYS));
-
 
     }
 }

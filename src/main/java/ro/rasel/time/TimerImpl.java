@@ -3,8 +3,8 @@ package ro.rasel.time;
 import java.time.Duration;
 
 public class TimerImpl implements Timer {
-    private long nanos = System.currentTimeMillis();
-    private boolean verbose;
+    private final long nanos = System.currentTimeMillis();
+    private final boolean verbose;
 
     public TimerImpl() {
         this(false);

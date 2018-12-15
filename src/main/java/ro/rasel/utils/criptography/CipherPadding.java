@@ -4,8 +4,4 @@ public enum CipherPadding {
     PKCS5Padding,
     PKCS1Padding,
     ;
-
-    public String getPadding() {
-        return name();
-    }
 }

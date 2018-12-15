@@ -49,7 +49,7 @@ public class CipherUtilsSymmetricKeyCbcTest {
     }
 
     @Test
-    public void assertThatEncriptionOfBytesIsReversible()
+    public void assertThatEncryptionOfBytesIsReversible()
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
             NoSuchPaddingException, InvalidAlgorithmParameterException {
         byte[] bytes = EncodingUtils.toBytes(text);

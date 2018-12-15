@@ -34,18 +34,18 @@ public class CipherUtils {
         return convert(message, key, algorithmParameterSpec, mode);
     }
 
-    public byte[] decryptMessage(byte[] encriptedMessage, Key key)
+    public byte[] decryptMessage(byte[] encryptedMessage, Key key)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
             InvalidKeyException {
         int mode = Cipher.DECRYPT_MODE;
-        return convert(encriptedMessage, key, mode);
+        return convert(encryptedMessage, key, mode);
     }
 
-    public byte[] decryptMessage(byte[] encriptedMessage, Key key, AlgorithmParameterSpec algorithmParameterSpec)
+    public byte[] decryptMessage(byte[] encryptedMessage, Key key, AlgorithmParameterSpec algorithmParameterSpec)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
             InvalidKeyException, InvalidAlgorithmParameterException {
         int mode = Cipher.DECRYPT_MODE;
-        return convert(encriptedMessage, key, algorithmParameterSpec, mode);
+        return convert(encryptedMessage, key, algorithmParameterSpec, mode);
     }
 
     private byte[] convert(byte[] message, Key key, int mode)
@@ -77,7 +77,6 @@ public class CipherUtils {
     private Cipher createCipher(Key key) throws NoSuchAlgorithmException, NoSuchPaddingException {
         Optional.of(key).orElseThrow(() -> new IllegalArgumentException("secretKey must not be null"));
 
-        Cipher cipher = Cipher.getInstance(algorithm.getCipherAlgorithm());
-        return cipher;
+        return Cipher.getInstance(algorithm.getCipherAlgorithm());
     }
 }

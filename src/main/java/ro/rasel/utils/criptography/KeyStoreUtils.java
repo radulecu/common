@@ -25,24 +25,17 @@ public class KeyStoreUtils {
         return keyStore;
     }
 
-    public KeyStore storeKeyStore(File file, PrivateKey key, Certificate certificate, String alias,
-                                  char[] keyStorePassword, char[] keyPassword, String keyStoreType)
+    public void storeKeyStore(File file, PrivateKey key, Certificate certificate, String alias,
+                              char[] keyStorePassword, char[] keyPassword, String keyStoreType)
             throws IOException, NoSuchAlgorithmException, CertificateException,
             KeyStoreException {
 
-        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-        keyStore.load(null, keyStorePassword);
-        if (key != null) {
-            keyStore.setKeyEntry(alias, key, keyPassword, new Certificate[]{certificate});
-        } else {
-            keyStore.setCertificateEntry(alias, certificate);
-        }
+        KeyStore keyStore = getKeyStore(file, keyStorePassword, keyStoreType);
+        keyStore.setKeyEntry(alias, key, keyPassword, new Certificate[]{certificate});
 
         try (FileOutputStream stream = new FileOutputStream(file)) {
             keyStore.store(stream, keyStorePassword);
         }
-
-        return keyStore;
     }
 
     public Certificate loadCertificate(File file, char[] keyStorePassword, String keyStoreType, String alias)
@@ -51,11 +44,21 @@ public class KeyStoreUtils {
         return keyStore.getCertificate(alias);
     }
 
-    public KeyStore storeCertificate(File file, Certificate certificate, String alias, char[] keyStorePassword,
-                                     String keyStoreType)
+    public void storeCertificate(File file, Certificate certificate, String alias, char[] keyStorePassword,
+                                 String keyStoreType)
             throws IOException, NoSuchAlgorithmException, CertificateException,
             KeyStoreException {
 
+        KeyStore keyStore = getKeyStore(file, keyStorePassword, keyStoreType);
+        keyStore.setCertificateEntry(alias, certificate);
+
+        try (FileOutputStream stream = new FileOutputStream(file)) {
+            keyStore.store(stream, keyStorePassword);
+        }
+    }
+
+    private static KeyStore getKeyStore(File file, char[] keyStorePassword, String keyStoreType)
+            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         KeyStore keyStore = KeyStore.getInstance(keyStoreType);
 
         if (file.exists()) {
@@ -65,12 +68,6 @@ public class KeyStoreUtils {
         } else {
             keyStore.load(null, keyStorePassword);
         }
-        keyStore.setCertificateEntry(alias, certificate);
-
-        try (FileOutputStream stream = new FileOutputStream(file)) {
-            keyStore.store(stream, keyStorePassword);
-        }
-
         return keyStore;
     }
 }

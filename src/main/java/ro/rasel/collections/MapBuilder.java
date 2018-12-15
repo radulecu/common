@@ -40,7 +40,7 @@ public class MapBuilder<K, V> {
     }
 
     /**
-     * When you want any map {@link Map} or an ordered one you can simply use this method instead of {@link MapBuilder#build()}.
+     * When you want any map {@link Map} or an ordered one you can simply use this method instead of {@link MapBuilder#build(Function)} .
      *
      * @return an immutable map containing the elements provided to the {@link MapBuilder}
      */
@@ -73,9 +73,9 @@ public class MapBuilder<K, V> {
      * <pre> {@code Stream<Integer> stream = mapBuilder.build(map -> map.keySet().stream());
      *  stream.map(Object::toString).collect(Collectors.joining(", "));} </pre>
      *
-     * @param function
-     * @param <S> type of map
-     * @return
+     * @param function used for generating the build map
+     * @param <S>      type of map
+     * @return new object
      */
     public <S> S build(Function<Map<K, V>, ? extends S> function) {
         return function.apply(Collections.unmodifiableMap(map));

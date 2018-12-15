@@ -91,7 +91,8 @@ public class TimeIntervalTest {
                 .put(duration, HOURS + " hours" + ":" + MINUTES + " minutes" + ":" + NANOS + " nanoseconds");
 
         for (Map.Entry<Duration, String> expectedResult : expectedResults.entrySet()) {
-            ITimeFormatter<Duration, ChronoUnit> timeFormatterVerbose = new TimeInterval(expectedResult.getKey(), false);
+            ITimeFormatter<Duration, ChronoUnit> timeFormatterVerbose =
+                    new TimeInterval(expectedResult.getKey(), false);
             assertThat(timeFormatterVerbose.toString(), is(expectedResult.getValue()));
         }
 
@@ -103,7 +104,7 @@ public class TimeIntervalTest {
 
     @Test(expected = RuntimeException.class)
     public void testDaysValueToBig() {
-        ITimeFormatter<Duration,ChronoUnit> timeFormatter=new TimeInterval(Duration.ofDays(Integer.MAX_VALUE+1L));
+        ITimeFormatter<Duration, ChronoUnit> timeFormatter = new TimeInterval(Duration.ofDays(Integer.MAX_VALUE + 1L));
         timeFormatter.getAsInt(ChronoUnit.DAYS);
     }
 

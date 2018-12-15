@@ -4,8 +4,4 @@ public enum CipherMode {
     ECB,
     CBC,
     ;
-
-    public String getMode() {
-        return name();
-    }
 }

@@ -24,8 +24,7 @@ public class KeySpecUtils {
     public Key generateNewKeySpec(int keySize) throws NoSuchAlgorithmException {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
         keyGenerator.init(keySize);
-        SecretKey key = keyGenerator.generateKey();
-        return key;
+        return keyGenerator.generateKey();
     }
 
     public IvParameterSpec generateNewIvSpec(int blockSize) {

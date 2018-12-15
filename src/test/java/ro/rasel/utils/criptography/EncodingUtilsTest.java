@@ -11,7 +11,6 @@ import java.util.Collection;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class EncodingUtilsTest {
@@ -52,6 +51,6 @@ public class EncodingUtilsTest {
     public void assertConversionBetweenBytesAndStringIsReversible() {
         assertThat(EncodingUtils.toString(EncodingUtils.toBytes(text)), is(text));
         // check conversion returns String from pool and has the exact same object as original text
-        assertTrue(EncodingUtils.toString(EncodingUtils.toBytes(text)) == text);
+        assertThat(EncodingUtils.toString(EncodingUtils.toBytes(text)), is(text));
     }
 }

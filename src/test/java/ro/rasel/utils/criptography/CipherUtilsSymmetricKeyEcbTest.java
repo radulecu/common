@@ -43,7 +43,7 @@ public class CipherUtilsSymmetricKeyEcbTest {
     }
 
     @Test
-    public void assertThatEncriptionOfBytesIsReversible()
+    public void assertThatEncryptionOfBytesIsReversible()
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
             NoSuchPaddingException {
         byte[] bytes = EncodingUtils.toBytes(text);

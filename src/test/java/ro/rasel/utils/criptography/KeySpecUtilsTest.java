@@ -42,7 +42,7 @@ public class KeySpecUtilsTest {
     }
 
     @Test
-    public void assertThatEverytimeANewKeyIsGenerated() throws NoSuchAlgorithmException {
+    public void assertThatEveryTimeANewKeyIsGenerated() throws NoSuchAlgorithmException {
         Key key = keySpecUtils.generateNewKeySpec(keySize);
         Key key2 = keySpecUtils.generateNewKeySpec(keySize);
 

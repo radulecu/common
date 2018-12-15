@@ -29,7 +29,7 @@ public class KeyPairUtilsTest {
     }
 
     @Test
-    public void assertThatEverytimeANewKeyIsGenerated() throws NoSuchAlgorithmException {
+    public void assertThatEveryTimeANewKeyIsGenerated() throws NoSuchAlgorithmException {
         KeyPair keyPair = rsaEncodingUtils.generateNewKeyPair(2048);
         KeyPair keyPair2 = rsaEncodingUtils.generateNewKeyPair(2048);
 
