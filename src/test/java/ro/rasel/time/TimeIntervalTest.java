@@ -12,13 +12,13 @@ import static org.junit.Assert.assertThat;
 
 public class TimeIntervalTest {
 
-    private static final long NANOS = 345;
-    private static final long MICROS = 12;
-    private static final long MILLIS = 25;
-    private static final long SECONDS = 5;
-    private static final long MINUTES = 7;
-    private static final long HOURS = 9;
-    private static final long DAYS = 3;
+    private static final int NANOS = 345;
+    private static final int MICROS = 12;
+    private static final int MILLIS = 25;
+    private static final int SECONDS = 5;
+    private static final int MINUTES = 7;
+    private static final int HOURS = 9;
+    private static final int DAYS = 3;
 
     private static final Duration DURATION =
             Duration.ofNanos(NANOS + MICROS * 1000).plusMillis(MILLIS).plusSeconds(SECONDS).plusMinutes(MINUTES)
@@ -32,13 +32,13 @@ public class TimeIntervalTest {
     @Test
     public void testGetters() {
         ITimeInterval<Duration, ChronoUnit> timeInterval = new TimeInterval(DURATION);
-        assertThat(timeInterval.get(ChronoUnit.NANOS), is(NANOS));
-        assertThat(timeInterval.get(ChronoUnit.MICROS), is(MICROS));
-        assertThat(timeInterval.get(ChronoUnit.MILLIS), is(MILLIS));
-        assertThat(timeInterval.get(ChronoUnit.DAYS), is(DAYS));
-        assertThat(timeInterval.get(ChronoUnit.MINUTES), is(MINUTES));
-        assertThat(timeInterval.get(ChronoUnit.HOURS), is(HOURS));
-        assertThat(timeInterval.get(ChronoUnit.SECONDS), is(SECONDS));
+        assertThat(timeInterval.getAsInt(ChronoUnit.NANOS), is(NANOS));
+        assertThat(timeInterval.getAsInt(ChronoUnit.MICROS), is(MICROS));
+        assertThat(timeInterval.getAsInt(ChronoUnit.MILLIS), is(MILLIS));
+        assertThat(timeInterval.getAsInt(ChronoUnit.DAYS), is(DAYS));
+        assertThat(timeInterval.getAsInt(ChronoUnit.MINUTES), is(MINUTES));
+        assertThat(timeInterval.getAsInt(ChronoUnit.HOURS), is(HOURS));
+        assertThat(timeInterval.getAsInt(ChronoUnit.SECONDS), is(SECONDS));
     }
 
     @Test
@@ -99,6 +99,12 @@ public class TimeIntervalTest {
             ITimeInterval<Duration, ChronoUnit> timeIntervalVerbose = new TimeInterval(expectedResult.getKey(), true);
             assertThat(timeIntervalVerbose.toString(), is(expectedResult.getValue()));
         }
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testDaysValueToBig() {
+        ITimeInterval<Duration,ChronoUnit> timeInterval=new TimeInterval(Duration.ofDays(Integer.MAX_VALUE+1L));
+        timeInterval.getAsInt(ChronoUnit.DAYS);
     }
 
 }
