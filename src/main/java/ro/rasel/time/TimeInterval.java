@@ -15,7 +15,7 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.time.temporal.ChronoUnit.NANOS;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
-public class TimeInterval extends AbstractTimeInterval<Duration, ChronoUnit> {
+public class TimeInterval extends AbstractTimeFormatter<Duration, ChronoUnit> {
     private static final Map<ChronoUnit, ToLongFunction<Duration>> TIME_PROVIDER =
             MapBuilder.<ChronoUnit, ToLongFunction<Duration>>ofOrderedMap()
                     .put(DAYS, Duration::toDays)
@@ -43,6 +43,6 @@ public class TimeInterval extends AbstractTimeInterval<Duration, ChronoUnit> {
     }
 
     public String toString(boolean verbose) {
-        return format(verbose ? TimeFormatter.VERBOSE_FORMATTER : TimeFormatter.SIMPLE_FORMATTER);
+        return format(verbose ? TimeUnitFormatter.VERBOSE_FORMATTER : TimeUnitFormatter.SIMPLE_FORMATTER);
     }
 }

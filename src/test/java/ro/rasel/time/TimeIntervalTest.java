@@ -31,32 +31,32 @@ public class TimeIntervalTest {
 
     @Test
     public void testGetters() {
-        ITimeInterval<Duration, ChronoUnit> timeInterval = new TimeInterval(DURATION);
-        assertThat(timeInterval.getAsInt(ChronoUnit.NANOS), is(NANOS));
-        assertThat(timeInterval.getAsInt(ChronoUnit.MICROS), is(MICROS));
-        assertThat(timeInterval.getAsInt(ChronoUnit.MILLIS), is(MILLIS));
-        assertThat(timeInterval.getAsInt(ChronoUnit.DAYS), is(DAYS));
-        assertThat(timeInterval.getAsInt(ChronoUnit.MINUTES), is(MINUTES));
-        assertThat(timeInterval.getAsInt(ChronoUnit.HOURS), is(HOURS));
-        assertThat(timeInterval.getAsInt(ChronoUnit.SECONDS), is(SECONDS));
+        ITimeFormatter<Duration, ChronoUnit> timeFormatter = new TimeInterval(DURATION);
+        assertThat(timeFormatter.getAsInt(ChronoUnit.NANOS), is(NANOS));
+        assertThat(timeFormatter.getAsInt(ChronoUnit.MICROS), is(MICROS));
+        assertThat(timeFormatter.getAsInt(ChronoUnit.MILLIS), is(MILLIS));
+        assertThat(timeFormatter.getAsInt(ChronoUnit.DAYS), is(DAYS));
+        assertThat(timeFormatter.getAsInt(ChronoUnit.MINUTES), is(MINUTES));
+        assertThat(timeFormatter.getAsInt(ChronoUnit.HOURS), is(HOURS));
+        assertThat(timeFormatter.getAsInt(ChronoUnit.SECONDS), is(SECONDS));
     }
 
     @Test
     public void testToString() {
-        ITimeInterval<Duration, ChronoUnit> timeIntervalNonVerbose = new TimeInterval(DURATION, false);
-        ITimeInterval<Duration, ChronoUnit> timeIntervalVerbose = new TimeInterval(DURATION, true);
+        ITimeFormatter<Duration, ChronoUnit> timeFormatterNonVerbose = new TimeInterval(DURATION, false);
+        ITimeFormatter<Duration, ChronoUnit> timeFormatterVerbose = new TimeInterval(DURATION, true);
 
-        assertThat(timeIntervalNonVerbose.toString(), is(DURATION_AS_STRING));
-        assertThat(timeIntervalVerbose.toString(), is(DURATION_AS_STRING_VERBOSE));
+        assertThat(timeFormatterNonVerbose.toString(), is(DURATION_AS_STRING));
+        assertThat(timeFormatterVerbose.toString(), is(DURATION_AS_STRING_VERBOSE));
     }
 
     @Test
     public void testZeroValues() {
-        ITimeInterval<Duration, ChronoUnit> timeIntervalNonVerbose = new TimeInterval(Duration.ofSeconds(0), false);
-        ITimeInterval<Duration, ChronoUnit> timeIntervalVerbose = new TimeInterval(Duration.ofSeconds(0), true);
+        ITimeFormatter<Duration, ChronoUnit> timeFormatterNonVerbose = new TimeInterval(Duration.ofSeconds(0), false);
+        ITimeFormatter<Duration, ChronoUnit> timeFormatterVerbose = new TimeInterval(Duration.ofSeconds(0), true);
 
-        assertThat(timeIntervalNonVerbose.toString(), is("0"));
-        assertThat(timeIntervalVerbose.toString(), is("0"));
+        assertThat(timeFormatterNonVerbose.toString(), is("0"));
+        assertThat(timeFormatterVerbose.toString(), is("0"));
     }
 
     @Test
@@ -65,11 +65,11 @@ public class TimeIntervalTest {
                 .plusMillis(1).plusSeconds(1).plusMinutes(1).plusHours(1)
                 .plusDays(1);
 
-        ITimeInterval<Duration, ChronoUnit> timeIntervalNonVerbose = new TimeInterval(durationOfOnes, false);
-        ITimeInterval<Duration, ChronoUnit> timeIntervalVerbose = new TimeInterval(durationOfOnes, true);
+        ITimeFormatter<Duration, ChronoUnit> timeFormatterNonVerbose = new TimeInterval(durationOfOnes, false);
+        ITimeFormatter<Duration, ChronoUnit> timeFormatterVerbose = new TimeInterval(durationOfOnes, true);
 
-        assertThat(timeIntervalNonVerbose.toString(), is("1d:1h:1m:1s:1ms:1ns"));
-        assertThat(timeIntervalVerbose.toString(), is("1 day:1 hour:1 minute:1 second:1 millisecond:1 nanosecond"));
+        assertThat(timeFormatterNonVerbose.toString(), is("1d:1h:1m:1s:1ms:1ns"));
+        assertThat(timeFormatterVerbose.toString(), is("1 day:1 hour:1 minute:1 second:1 millisecond:1 nanosecond"));
     }
 
     @Test
@@ -91,20 +91,20 @@ public class TimeIntervalTest {
                 .put(duration, HOURS + " hours" + ":" + MINUTES + " minutes" + ":" + NANOS + " nanoseconds");
 
         for (Map.Entry<Duration, String> expectedResult : expectedResults.entrySet()) {
-            ITimeInterval<Duration, ChronoUnit> timeIntervalVerbose = new TimeInterval(expectedResult.getKey(), false);
-            assertThat(timeIntervalVerbose.toString(), is(expectedResult.getValue()));
+            ITimeFormatter<Duration, ChronoUnit> timeFormatterVerbose = new TimeInterval(expectedResult.getKey(), false);
+            assertThat(timeFormatterVerbose.toString(), is(expectedResult.getValue()));
         }
 
         for (Map.Entry<Duration, String> expectedResult : expectedVerboseResults.entrySet()) {
-            ITimeInterval<Duration, ChronoUnit> timeIntervalVerbose = new TimeInterval(expectedResult.getKey(), true);
-            assertThat(timeIntervalVerbose.toString(), is(expectedResult.getValue()));
+            ITimeFormatter<Duration, ChronoUnit> timeFormatterVerbose = new TimeInterval(expectedResult.getKey(), true);
+            assertThat(timeFormatterVerbose.toString(), is(expectedResult.getValue()));
         }
     }
 
     @Test(expected = RuntimeException.class)
     public void testDaysValueToBig() {
-        ITimeInterval<Duration,ChronoUnit> timeInterval=new TimeInterval(Duration.ofDays(Integer.MAX_VALUE+1L));
-        timeInterval.getAsInt(ChronoUnit.DAYS);
+        ITimeFormatter<Duration,ChronoUnit> timeFormatter=new TimeInterval(Duration.ofDays(Integer.MAX_VALUE+1L));
+        timeFormatter.getAsInt(ChronoUnit.DAYS);
     }
 
 }

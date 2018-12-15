@@ -11,7 +11,7 @@ public class TimerImpl implements Timer {
     }
 
     @Override
-    public ITimeInterval getTimePassed() {
+    public ITimeFormatter getTimePassed() {
         return new TimeInterval(Duration.ofMillis(System.currentTimeMillis() - nanos), verbose);
     }
 

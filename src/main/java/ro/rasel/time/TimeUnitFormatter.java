@@ -18,8 +18,8 @@ import static java.time.temporal.ChronoUnit.NANOS;
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
-public class TimeFormatter implements ITimeFormatter<ChronoUnit> {
-    public static final ITimeFormatter<ChronoUnit> SIMPLE_FORMATTER = new TimeFormatter(
+public class TimeUnitFormatter implements ITimeUnitFormatter<ChronoUnit> {
+    public static final ITimeUnitFormatter<ChronoUnit> SIMPLE_FORMATTER = new TimeUnitFormatter(
             MapBuilder.<ChronoUnit, LongFunction<String>>ofMap()
                     .put(YEARS, value -> format(value, "y"))
                     .put(MONTHS, value -> format(value, "mo"))
@@ -32,7 +32,7 @@ public class TimeFormatter implements ITimeFormatter<ChronoUnit> {
                     .put(NANOS, value -> format(value, "ns"))
                     .build(),
             ":");
-    public static final ITimeFormatter<ChronoUnit> VERBOSE_FORMATTER = new TimeFormatter(
+    public static final ITimeUnitFormatter<ChronoUnit> VERBOSE_FORMATTER = new TimeUnitFormatter(
             MapBuilder.<ChronoUnit, LongFunction<String>>ofMap()
                     .put(YEARS, value -> format(value, " year", " years"))
                     .put(MONTHS, value -> format(value, " month", " months"))
@@ -49,7 +49,7 @@ public class TimeFormatter implements ITimeFormatter<ChronoUnit> {
     private final String separator;
     private final Map<ChronoUnit, LongFunction<String>> formatterMap;
 
-    public TimeFormatter(Map<ChronoUnit, LongFunction<String>> formatterMap, String separator) {
+    public TimeUnitFormatter(Map<ChronoUnit, LongFunction<String>> formatterMap, String separator) {
         Objects.requireNonNull(formatterMap, "formatterMap should not be null");
         Objects.requireNonNull(separator, "separator should not be null");
 

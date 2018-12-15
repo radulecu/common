@@ -11,7 +11,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
-public class PeriodInterval extends AbstractTimeInterval<Period, ChronoUnit> {
+public class PeriodInterval extends AbstractTimeFormatter<Period, ChronoUnit> {
     private static final Map<ChronoUnit, ToLongFunction<Period>> TIME_PROVIDER =
             MapBuilder.<ChronoUnit, ToLongFunction<Period>>ofOrderedMap()
                     .put(YEARS, Period::getYears)
@@ -35,6 +35,6 @@ public class PeriodInterval extends AbstractTimeInterval<Period, ChronoUnit> {
     }
 
     public String toString(boolean verbose) {
-        return format(verbose ? TimeFormatter.VERBOSE_FORMATTER : TimeFormatter.SIMPLE_FORMATTER);
+        return format(verbose ? TimeUnitFormatter.VERBOSE_FORMATTER : TimeUnitFormatter.SIMPLE_FORMATTER);
     }
 }

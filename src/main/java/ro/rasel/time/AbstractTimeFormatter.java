@@ -7,11 +7,11 @@ import java.util.function.LongFunction;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 
-public abstract class AbstractTimeInterval<T, U extends TemporalUnit> implements ITimeInterval<T, U> {
+public abstract class AbstractTimeFormatter<T, U extends TemporalUnit> implements ITimeFormatter<T, U> {
     private final Map<U, ToLongFunction<T>> timeProvider;
     private final T t;
 
-    public AbstractTimeInterval(T t, Map<U, ToLongFunction<T>> timeProvider) {
+    public AbstractTimeFormatter(T t, Map<U, ToLongFunction<T>> timeProvider) {
         this.t = t;
         this.timeProvider = timeProvider;
     }
@@ -26,7 +26,7 @@ public abstract class AbstractTimeInterval<T, U extends TemporalUnit> implements
         return timeProvider.get(unit).applyAsLong(getTime());
     }
 
-    public String format(ITimeFormatter<U> timeFormatter) {
+    public String format(ITimeUnitFormatter<U> timeFormatter) {
         String s = timeProvider.keySet().stream()
                 .map(unit -> format(getAsInt(unit), timeFormatter.getFormatter(unit)))
                 .filter(Objects::nonNull).collect(Collectors.joining(timeFormatter.getSeparator()));
