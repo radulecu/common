@@ -11,7 +11,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
-public class PeriodInterval extends AbstractTimeFormatter<Period, ChronoUnit> {
+public class PeriodInterval extends AbstractTimeFormatter<Period, ChronoUnit> implements IPeriodInterval {
     private static final Map<ChronoUnit, ToLongFunction<Period>> TIME_PROVIDER =
             MapBuilder.<ChronoUnit, ToLongFunction<Period>>ofOrderedMap()
                     .put(YEARS, Period::getYears)

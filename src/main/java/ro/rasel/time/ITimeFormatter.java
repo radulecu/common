@@ -10,6 +10,7 @@ public interface ITimeFormatter<T, U extends TemporalUnit> {
     /**
      * Depending on the way time is represented some of the values are guaranteed to be ints. as a result this method
      * is safe to be used and has the purpose to do the cast to int.
+     *
      * @param u
      * @return
      */
