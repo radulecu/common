@@ -6,12 +6,16 @@ public class TimerImpl implements Timer {
     private long nanos = System.currentTimeMillis();
     private boolean verbose;
 
+    public TimerImpl() {
+        this(false);
+    }
+
     public TimerImpl(boolean verbose) {
         this.verbose = verbose;
     }
 
     @Override
-    public ITimeFormatter getTimePassed() {
+    public ITimeInterval getTimePassed() {
         return new TimeInterval(Duration.ofMillis(System.currentTimeMillis() - nanos), verbose);
     }
 

@@ -35,7 +35,7 @@ public class KeyPairUtils {
     }
 
     public byte[] toBytes(Key key) {
-        return Optional.ofNullable(key).map(k -> k.getEncoded()).orElse(null);
+        return Optional.ofNullable(key).map(Key::getEncoded).orElse(null);
     }
 
     public PrivateKey toPrivateKey(byte[] privateKey) throws InvalidKeySpecException, NoSuchAlgorithmException {
