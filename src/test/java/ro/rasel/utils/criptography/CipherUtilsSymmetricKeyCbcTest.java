@@ -44,7 +44,7 @@ public class CipherUtilsSymmetricKeyCbcTest {
     public static Collection<Object[]> data() {
         return Stream.of("test", "(teststring)*(^*&787867", null, "", "\u4321\u3395\u2121").flatMap(
                 t -> Arrays.stream(EncryptionAlgorithm.values()).filter(EncryptionAlgorithm::isSymmetric)
-                        .filter(a -> CBC.equals(a.getCipherAlgorithm().getCipherMode()))
+                        .filter(a -> CBC.toString().equals(a.getCipherAlgorithm().getCipherMode()))
                         .map(a -> new Object[]{t, a})).collect(Collectors.toCollection(ArrayList::new));
     }
 

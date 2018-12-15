@@ -22,61 +22,69 @@ public class CipherUtils {
 
     public byte[] encryptMessage(byte[] message, Key key)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
-            InvalidKeyException {
+            InvalidKeyException, InvalidAlgorithmParameterException {
         int mode = Cipher.ENCRYPT_MODE;
-        return convert(message, key, mode);
+        return convert(message, key, mode, (cipher) -> cipher.doFinal(message));
     }
 
     public byte[] encryptMessage(byte[] message, Key key, AlgorithmParameterSpec algorithmParameterSpec)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
             InvalidKeyException, InvalidAlgorithmParameterException {
         int mode = Cipher.ENCRYPT_MODE;
-        return convert(message, key, algorithmParameterSpec, mode);
+        return convert(message, key, mode, algorithmParameterSpec, (cipher) -> cipher.doFinal(message));
     }
 
     public byte[] decryptMessage(byte[] encryptedMessage, Key key)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
-            InvalidKeyException {
+            InvalidKeyException, InvalidAlgorithmParameterException {
         int mode = Cipher.DECRYPT_MODE;
-        return convert(encryptedMessage, key, mode);
+        return convert(encryptedMessage, key, mode, (cipher) -> cipher.doFinal(encryptedMessage));
     }
 
     public byte[] decryptMessage(byte[] encryptedMessage, Key key, AlgorithmParameterSpec algorithmParameterSpec)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException,
             InvalidKeyException, InvalidAlgorithmParameterException {
         int mode = Cipher.DECRYPT_MODE;
-        return convert(encryptedMessage, key, algorithmParameterSpec, mode);
+        return convert(encryptedMessage, key, mode, algorithmParameterSpec, (cipher) -> cipher.doFinal(encryptedMessage));
     }
 
-    private byte[] convert(byte[] message, Key key, int mode)
+    private byte[] convert(byte[] input, Key key, int mode, EncryptionHandler<byte[]> encryptionHandler)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
-            IllegalBlockSizeException {
-        if (message == null) {
+            IllegalBlockSizeException, InvalidAlgorithmParameterException {
+        if (input == null) {
             return null;
         }
 
         Cipher cipher = createCipher(key);
         cipher.init(mode, key);
 
-        return cipher.doFinal(message);
+        return encryptionHandler.convert(cipher);
     }
 
-    private byte[] convert(byte[] message, Key key, AlgorithmParameterSpec algorithmParameterSpec, int mode)
+    private byte[] convert(byte[] input, Key key, int mode, AlgorithmParameterSpec algorithmParameterSpec,
+                           EncryptionHandler<byte[]> encryptionHandler)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
             IllegalBlockSizeException, InvalidAlgorithmParameterException {
-        if (message == null) {
+        if (input == null) {
             return null;
         }
 
         Cipher cipher = createCipher(key);
         cipher.init(mode, key, algorithmParameterSpec);
 
-        return cipher.doFinal(message);
+        return encryptionHandler.convert(cipher);
     }
 
     private Cipher createCipher(Key key) throws NoSuchAlgorithmException, NoSuchPaddingException {
         Optional.of(key).orElseThrow(() -> new IllegalArgumentException("secretKey must not be null"));
 
         return Cipher.getInstance(algorithm.getCipherAlgorithm());
+    }
+
+    @FunctionalInterface
+    public interface EncryptionHandler<T> {
+        T convert(Cipher cipher)
+                throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
+                IllegalBlockSizeException, InvalidAlgorithmParameterException;
     }
 }

@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized.Parameters;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -40,7 +41,7 @@ public class CipherUtilsAsymmetricKeyTest {
     @Test
     public void assertThatEncryptionOfBytesIsReversible()
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
-            NoSuchPaddingException {
+            NoSuchPaddingException, InvalidAlgorithmParameterException {
         KeyPair keyPair = keyPairUtils.generateNewKeyPair(2048);
         byte[] bytes = EncodingUtils.toBytes(text);
 
@@ -52,7 +53,7 @@ public class CipherUtilsAsymmetricKeyTest {
     @Test
     public void assertNullsReturnNulls()
             throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
-            NoSuchPaddingException {
+            NoSuchPaddingException, InvalidAlgorithmParameterException {
         KeyPair keyPair = keyPairUtils.generateNewKeyPair(2048);
         assertNull(cipherUtils.encryptMessage(null, keyPair.getPrivate()));
         assertNull(cipherUtils.decryptMessage(null, keyPair.getPublic()));

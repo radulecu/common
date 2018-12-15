@@ -3,9 +3,9 @@ package ro.rasel.utils.criptography;
 public interface ICipherAlgorithm {
     String getAlgorithm();
 
-    CipherMode getCipherMode();
+    String getCipherMode();
 
-    CipherPadding getPadding();
+    String getPadding();
 
     String getCipherAlgorithm();
 }

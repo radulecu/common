@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized.Parameters;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -38,14 +39,14 @@ public class CipherUtilsSymmetricKeyEcbTest {
     public static Collection<Object[]> data() {
         return Stream.of("test", "(teststring)*(^*&787867", null, "", "\u4321\u3395\u2121").flatMap(
                 t -> Arrays.stream(EncryptionAlgorithm.values()).filter(EncryptionAlgorithm::isSymmetric)
-                        .filter(a -> ECB.equals(a.getCipherAlgorithm().getCipherMode()))
+                        .filter(a -> ECB.toString().equals(a.getCipherAlgorithm().getCipherMode()))
                         .map(a -> new Object[]{t, a})).collect(Collectors.toList());
     }
 
     @Test
     public void assertThatEncryptionOfBytesIsReversible()
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
-            NoSuchPaddingException {
+            NoSuchPaddingException, InvalidAlgorithmParameterException {
         byte[] bytes = EncodingUtils.toBytes(text);
         assertThat(EncodingUtils.toString(cipherUtils.decryptMessage(cipherUtils.encryptMessage(bytes, key), key)),
                 is(text));
@@ -54,7 +55,7 @@ public class CipherUtilsSymmetricKeyEcbTest {
     @Test
     public void assertNullsReturnNulls()
             throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
-            NoSuchPaddingException {
+            NoSuchPaddingException, InvalidAlgorithmParameterException {
         assertNull(cipherUtils.encryptMessage(null, key));
         assertNull(cipherUtils.decryptMessage(null, key));
     }
