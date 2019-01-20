@@ -38,7 +38,7 @@ public class MapBuilderTest {
     }
 
     @Test
-    public void orderedMapTest() {
+    public void ofOrderedMap() {
         MapBuilder<Integer, String> orderedMapBuilder =
                 MapBuilder.<Integer, String>ofOrderedMap()
                         .put(2, "2")
@@ -61,7 +61,7 @@ public class MapBuilderTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void testImmutable() {
+    public void assertImmutable() {
         MapBuilder<Integer, String> mapBuilder =
                 MapBuilder.<Integer, String>ofMap().put(2, "2").put(1, "One").put(2, "Two").put(3, "Three");
         Map<Integer, String> immutableMap = mapBuilder.build(m -> Collections.unmodifiableMap(new HashMap<>(m)));
@@ -69,7 +69,7 @@ public class MapBuilderTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void testImmutableMapProvidedInFunction() {
+    public void assertImmutableMapProvidedInFunction() {
         MapBuilder<Integer, String> mapBuilder =
                 MapBuilder.<Integer, String>ofMap().put(2, "2").put(1, "One").put(2, "Two").put(3, "Three");
         mapBuilder.build(m -> {
@@ -79,7 +79,7 @@ public class MapBuilderTest {
     }
 
     @Test
-    public void testBuilderForNonMapObjects() {
+    public void builderForNonMapObjects() {
         MapBuilder<Integer, String> mapBuilder =
                 MapBuilder.<Integer, String>ofOrderedMap().put(2, "2").put(1, "One").put(2, "Two").put(3, "Three");
         String join =

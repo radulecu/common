@@ -40,7 +40,7 @@ public class MapBuilder<K, V> {
     }
 
     /**
-     * When you want any map {@link Map} or an ordered one you can simply use this method instead of {@link MapBuilder#build(Function)} .
+     * When you want any {@link Map} or an ordered one you can simply use this method instead of {@link MapBuilder#build(Function)} .
      *
      * @return an immutable map containing the elements provided to the {@link MapBuilder}
      */
@@ -54,9 +54,9 @@ public class MapBuilder<K, V> {
 
     /**
      * While {@link MapBuilder} has the purpose to help creating a new {@link Map} or any subtype by using the builder
-     * pattern the client of the method will have to actually create it himself by providing a function that should be
+     * pattern, the client of the method will have to actually create it himself by providing a function that should be
      * used for bot creation of the new {@link Map} and copying the content.
-     * This allows for both creation of any type of {@link Map} and a way to create an immutable {@link Map}.<br>
+     * This allows for both creation of any type of {@link Map} and a way to create an immutable one.<br>
      *
      * <pre> {@code mapBuilder.build(HashMap::new);
      *  mapBuilder.build(m -> Collections.unmodifiableNavigableMap(new TreeMap<>(m))); } </pre>
@@ -65,9 +65,8 @@ public class MapBuilder<K, V> {
      *
      * <pre> {@code mapBuilder.build(Function.identity()); } </pre>
      * <p>
-     * From the perspective of correctness of the code this is does not pose any risk as long as an unordered or
-     * ordered map is needed, the build method is called only once and none of the modify methods are called for the
-     * builder after that. <br>
+     * From the perspective of correctness of the code this does not pose any risk as long as the build method is called
+     * only once and none of the modify methods are called for the builder after that. <br>
      * In addition to that the builder can be used to build any Object based on that map like in the following example:
      *
      * <pre> {@code Stream<Integer> stream = mapBuilder.build(map -> map.keySet().stream());
