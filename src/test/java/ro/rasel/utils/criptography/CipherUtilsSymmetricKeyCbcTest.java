@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 public class CipherUtilsSymmetricKeyCbcTest {
-    private static final CipherMode CBC = CipherMode.CBC;
+    private static final CipherBlockMode CBC = CipherBlockMode.CBC;
     private final String text;
     private final CipherUtils cipherUtils;
     private final Key key;
@@ -53,16 +53,16 @@ public class CipherUtilsSymmetricKeyCbcTest {
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
             NoSuchPaddingException, InvalidAlgorithmParameterException {
         byte[] bytes = EncodingUtils.toBytes(text);
-        assertThat(EncodingUtils.toString(cipherUtils
-                .decryptMessage(cipherUtils.encryptMessage(bytes, key, algorithmParameterSpec), key,
-                        algorithmParameterSpec)), is(text));
+        assertThat(EncodingUtils.toString(cipherUtils.convert(
+                cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, key, algorithmParameterSpec),
+                CipherMode.DECRYPT_MODE, key, algorithmParameterSpec)), is(text));
     }
 
     @Test
-    public void assertNullsReturnNulls()
+    public void assertNullMessagesReturnNulls()
             throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
             NoSuchPaddingException, InvalidAlgorithmParameterException {
-        assertNull(cipherUtils.encryptMessage(null, key, algorithmParameterSpec));
-        assertNull(cipherUtils.decryptMessage(null, key, algorithmParameterSpec));
+        assertNull(cipherUtils.convert((byte[]) null, CipherMode.ENCRYPT_MODE, key, algorithmParameterSpec));
+        assertNull(cipherUtils.convert((byte[]) null, CipherMode.DECRYPT_MODE, key, algorithmParameterSpec));
     }
 }

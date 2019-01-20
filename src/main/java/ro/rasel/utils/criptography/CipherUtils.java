@@ -9,6 +9,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CipherUtils {
@@ -20,87 +21,48 @@ public class CipherUtils {
         this.algorithm = algorithm;
     }
 
-    public byte[] encryptMessage(byte[] message, Key key)
+    public ICipherAlgorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public byte[] convert(byte[] message, CipherMode cipherMode, Key key)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
             IllegalBlockSizeException {
         if (message == null) {
             return null;
         }
 
-        return encryptMessage(key, (cipher) -> cipher.doFinal(message));
+        return convert((cipher) -> cipher.doFinal(message), cipherMode, key);
     }
 
-    public <T> T encryptMessage(Key key, EncryptionHandler<T> encryptionHandler)
+    public <T> T convert(EncryptionHandler<T> encryptionHandler, CipherMode cypherMode, Key key)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
             IllegalBlockSizeException {
-        return convert(key, Cipher.ENCRYPT_MODE, encryptionHandler);
-    }
-
-    public byte[] encryptMessage(byte[] message, Key key, AlgorithmParameterSpec algorithmParameterSpec)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
-            InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
-        if (message == null) {
-            return null;
-        }
-
-        return encryptMessage(key, algorithmParameterSpec, (cipher) -> cipher.doFinal(message));
-    }
-
-    public <T> T encryptMessage(Key key, AlgorithmParameterSpec algorithmParameterSpec,
-                                EncryptionHandler<T> encryptionHandler)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
-            InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
-        return convert(key, Cipher.ENCRYPT_MODE, algorithmParameterSpec, encryptionHandler);
-    }
-
-    public byte[] decryptMessage(byte[] encryptedMessage, Key key)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
-            IllegalBlockSizeException {
-        if (encryptedMessage == null) {
-            return null;
-        }
-
-        return decryptMessage(key, (cipher) -> cipher.doFinal(encryptedMessage));
-    }
-
-    public <T> T decryptMessage(Key key, EncryptionHandler<T> encryptionHandler)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
-            IllegalBlockSizeException {
-        return convert(key, Cipher.DECRYPT_MODE, encryptionHandler);
-    }
-
-    public byte[] decryptMessage(byte[] encryptedMessage, Key key, AlgorithmParameterSpec algorithmParameterSpec)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
-            InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
-        if (encryptedMessage == null) {
-            return null;
-        }
-
-        return decryptMessage(key, algorithmParameterSpec, (cipher) -> cipher.doFinal(encryptedMessage));
-    }
-
-    public <T> T decryptMessage(Key key, AlgorithmParameterSpec algorithmParameterSpec,
-                                EncryptionHandler<T> encryptionHandler)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
-            InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
-        return convert(key, Cipher.DECRYPT_MODE, algorithmParameterSpec, encryptionHandler);
-    }
-
-    private <T> T convert(Key key, int mode, EncryptionHandler<T> encryptionHandler)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException,
-            IllegalBlockSizeException {
+        Objects.requireNonNull(encryptionHandler, "encryptionHandler argument must not be null");
         Cipher cipher = createCipher(key);
-        cipher.init(mode, key);
+        cipher.init(cypherMode.getMode(), key);
 
         return encryptionHandler.convert(cipher);
     }
 
-    private <T> T convert(Key key, int mode, AlgorithmParameterSpec algorithmParameterSpec,
-                          EncryptionHandler<T> encryptionHandler)
+    public byte[] convert(byte[] message, CipherMode cipherMode, Key key,
+            AlgorithmParameterSpec algorithmParameterSpec)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
             InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
+        if (message == null) {
+            return null;
+        }
+
+        return convert((cipher) -> cipher.doFinal(message), cipherMode, key, algorithmParameterSpec);
+    }
+
+    public <T> T convert(EncryptionHandler<T> encryptionHandler, CipherMode cypherMode, Key key,
+            AlgorithmParameterSpec algorithmParameterSpec)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
+            InvalidAlgorithmParameterException, BadPaddingException, IllegalBlockSizeException {
+        Objects.requireNonNull(encryptionHandler, "encryptionHandler argument must not be null");
         Cipher cipher = createCipher(key);
-        cipher.init(mode, key, algorithmParameterSpec);
+        cipher.init(cypherMode.getMode(), key, algorithmParameterSpec);
 
         return encryptionHandler.convert(cipher);
     }

@@ -1,7 +1,17 @@
 package ro.rasel.utils.criptography;
 
 public enum CipherMode {
-    ECB,
-    CBC,
+    ENCRYPT_MODE(1),
+    DECRYPT_MODE(2),
     ;
+
+    private final int mode;
+
+    CipherMode(int mode) {
+        this.mode = mode;
+    }
+
+    int getMode() {
+        return mode;
+    }
 }

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
 public class CipherUtilsSymmetricKeyEcbTest {
-    private static final CipherMode ECB = CipherMode.ECB;
+    private static final CipherBlockMode ECB = CipherBlockMode.ECB;
     private final String text;
     private final CipherUtils cipherUtils;
     private final Key key;
@@ -47,15 +47,16 @@ public class CipherUtilsSymmetricKeyEcbTest {
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
             NoSuchPaddingException {
         byte[] bytes = EncodingUtils.toBytes(text);
-        assertThat(EncodingUtils.toString(cipherUtils.decryptMessage(cipherUtils.encryptMessage(bytes, key), key)),
+        assertThat(EncodingUtils.toString(cipherUtils
+                        .convert(cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, key), CipherMode.DECRYPT_MODE, key)),
                 is(text));
     }
 
     @Test
-    public void assertNullsReturnNulls()
+    public void assertNullMessagesReturnNulls()
             throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
             NoSuchPaddingException {
-        assertNull(cipherUtils.encryptMessage(null, key));
-        assertNull(cipherUtils.decryptMessage(null, key));
+        assertNull(cipherUtils.convert((byte[]) null, CipherMode.ENCRYPT_MODE, key));
+        assertNull(cipherUtils.convert((byte[]) null, CipherMode.DECRYPT_MODE, key));
     }
 }

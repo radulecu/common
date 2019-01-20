@@ -2,8 +2,8 @@ package ro.rasel.utils.criptography;
 
 import java.util.Objects;
 
-import static ro.rasel.utils.criptography.CipherMode.CBC;
-import static ro.rasel.utils.criptography.CipherMode.ECB;
+import static ro.rasel.utils.criptography.CipherBlockMode.CBC;
+import static ro.rasel.utils.criptography.CipherBlockMode.ECB;
 import static ro.rasel.utils.criptography.CipherPadding.PKCS1Padding;
 import static ro.rasel.utils.criptography.CipherPadding.PKCS5Padding;
 
@@ -20,8 +20,8 @@ public class CipherAlgorithm implements ICipherAlgorithm {
     private final String cipherMode;
     private final String padding;
 
-    public CipherAlgorithm(String algorithm, CipherMode cipherMode, CipherPadding padding) {
-        this(algorithm, cipherMode.toString(), padding.toString());
+    public CipherAlgorithm(String algorithm, CipherBlockMode cipherBlockMode, CipherPadding padding) {
+        this(algorithm, cipherBlockMode.toString(), padding.toString());
     }
 
     public CipherAlgorithm(String algorithm, String cipherMode, String padding) {

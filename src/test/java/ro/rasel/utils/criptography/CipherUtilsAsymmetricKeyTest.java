@@ -44,17 +44,17 @@ public class CipherUtilsAsymmetricKeyTest {
         KeyPair keyPair = keyPairUtils.generateNewKeyPair(2048);
         byte[] bytes = EncodingUtils.toBytes(text);
 
-        assertThat(EncodingUtils.toString(cipherUtils
-                        .decryptMessage(cipherUtils.encryptMessage(bytes, keyPair.getPrivate()), keyPair.getPublic())),
-                is(text));
+        assertThat(EncodingUtils.toString(cipherUtils.convert(
+                cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, keyPair.getPrivate()),
+                CipherMode.DECRYPT_MODE, keyPair.getPublic())), is(text));
     }
 
     @Test
-    public void assertNullsReturnNulls()
+    public void assertNullMessagesReturnNulls()
             throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException,
             NoSuchPaddingException {
         KeyPair keyPair = keyPairUtils.generateNewKeyPair(2048);
-        assertNull(cipherUtils.encryptMessage(null, keyPair.getPrivate()));
-        assertNull(cipherUtils.decryptMessage(null, keyPair.getPublic()));
+        assertNull(cipherUtils.convert((byte[]) null, CipherMode.ENCRYPT_MODE, keyPair.getPrivate()));
+        assertNull(cipherUtils.convert((byte[]) null, CipherMode.DECRYPT_MODE, keyPair.getPublic()));
     }
 }
