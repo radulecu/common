@@ -1,8 +1,9 @@
-package ro.rasel.time;
+package ro.rasel.time.format;
 
+import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
 
-public interface ITimeFormatter<T, U extends TemporalUnit> {
+public interface ITemporalAmountFormatter<T extends TemporalAmount, U extends TemporalUnit> {
     T getTime();
 
     long get(U u);

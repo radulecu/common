@@ -26,7 +26,7 @@ public class KeyStoreUtils {
     }
 
     public void storeKeyStore(File file, PrivateKey key, Certificate certificate, String alias,
-                              char[] keyStorePassword, char[] keyPassword, String keyStoreType)
+            char[] keyStorePassword, char[] keyPassword, String keyStoreType)
             throws IOException, NoSuchAlgorithmException, CertificateException,
             KeyStoreException {
 
@@ -45,7 +45,7 @@ public class KeyStoreUtils {
     }
 
     public void storeCertificate(File file, Certificate certificate, String alias, char[] keyStorePassword,
-                                 String keyStoreType)
+            String keyStoreType)
             throws IOException, NoSuchAlgorithmException, CertificateException,
             KeyStoreException {
 

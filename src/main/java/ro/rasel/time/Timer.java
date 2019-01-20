@@ -1,5 +1,7 @@
 package ro.rasel.time;
 
+import ro.rasel.time.format.IDurationFormatter;
+
 public interface Timer {
-    ITimeInterval getTimePassed();
+    IDurationFormatter getTimePassed();
 }

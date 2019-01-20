@@ -1,5 +1,8 @@
 package ro.rasel.time;
 
+import ro.rasel.time.format.DurationFormatter;
+import ro.rasel.time.format.IDurationFormatter;
+
 import java.time.Duration;
 
 public class TimerImpl implements Timer {
@@ -15,8 +18,8 @@ public class TimerImpl implements Timer {
     }
 
     @Override
-    public ITimeInterval getTimePassed() {
-        return new TimeInterval(Duration.ofMillis(System.currentTimeMillis() - nanos), verbose);
+    public IDurationFormatter getTimePassed() {
+        return new DurationFormatter(Duration.ofMillis(System.currentTimeMillis() - nanos), verbose);
     }
 
     @Override
