@@ -1,47 +1,39 @@
-package ro.rasel.utils.criptography;
+package ro.rasel.utils.criptography.key;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Objects;
 import java.util.Optional;
 
-public class KeySpecUtils {
+public class SecretKeyGenerator implements KeyGenerator {
     private final String algorithm;
 
-    public KeySpecUtils(String algorithm) {
+    public SecretKeyGenerator(String algorithm) {
         this.algorithm = algorithm;
     }
 
+    @Override
     public String getAlgorithm() {
         return algorithm;
     }
 
-    public Key generateNewKeySpec(int keySize) throws NoSuchAlgorithmException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
+    @Override
+    public SecretKey generateNewKey(int keySize) throws NoSuchAlgorithmException {
+        javax.crypto.KeyGenerator keyGenerator = javax.crypto.KeyGenerator.getInstance(algorithm);
         keyGenerator.init(keySize);
         return keyGenerator.generateKey();
     }
 
-    public IvParameterSpec generateNewIvSpec(int blockSize) {
-        SecureRandom randomSecureRandom = new SecureRandom();
-        byte[] iv = new byte[blockSize];
-        randomSecureRandom.nextBytes(iv);
-        return new IvParameterSpec(iv);
+    @Override
+    public SecretKey toKey(byte[] key) {
+        return Optional.ofNullable(key).map(bytes -> new SecretKeySpec(key, algorithm)).orElse(null);
     }
 
+    @Override
     public byte[] toBytes(Key key) {
         return Optional.ofNullable(key).map(Key::getEncoded).orElse(null);
-    }
-
-    public Key toKey(byte[] key) {
-        if (key == null) {
-            return null;
-        }
-        return new SecretKeySpec(key, algorithm);
     }
 
     @Override
@@ -52,7 +44,7 @@ public class KeySpecUtils {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        KeySpecUtils that = (KeySpecUtils) o;
+        SecretKeyGenerator that = (SecretKeyGenerator) o;
         return Objects.equals(algorithm, that.algorithm);
     }
 
@@ -63,6 +55,8 @@ public class KeySpecUtils {
 
     @Override
     public String toString() {
-        return "KeyPairUtils{" + "algorithm='" + algorithm + '\'' + '}';
+        return "SecretKeyGenerator{" +
+                "algorithm='" + algorithm + '\'' +
+                '}';
     }
 }

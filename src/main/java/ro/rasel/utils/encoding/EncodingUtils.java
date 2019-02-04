@@ -1,4 +1,4 @@
-package ro.rasel.utils.criptography;
+package ro.rasel.utils.encoding;
 
 import java.util.Base64;
 import java.util.Optional;

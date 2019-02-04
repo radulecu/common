@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import ro.rasel.utils.encoding.EncodingUtils;
 
 import java.util.Arrays;
 import java.util.Collection;

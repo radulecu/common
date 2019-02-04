@@ -1,6 +1,7 @@
-package ro.rasel.utils.criptography;
+package ro.rasel.utils.criptography.key;
 
 import org.junit.Test;
+import ro.rasel.utils.encoding.EncodingUtils;
 
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -11,8 +12,8 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-public class KeyPairUtilsTest {
-    private final KeyPairUtils rsaEncodingUtils = new KeyPairUtils("RSA");
+public class KeyPairGeneratorTest {
+    private final KeyPairGenerator rsaEncodingUtils = new KeyPairGeneratorImpl("RSA");
 
     @Test
     public void assertThatConversionOfKeysToBytesIsReversible()

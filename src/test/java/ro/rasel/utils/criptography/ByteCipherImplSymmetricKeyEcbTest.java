@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import ro.rasel.utils.criptography.key.SecretKeyGenerator;
+import ro.rasel.utils.encoding.EncodingUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -21,24 +23,24 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(Parameterized.class)
-public class CipherUtilsSymmetricKeyEcbTest {
+public class ByteCipherImplSymmetricKeyEcbTest {
     private static final CipherBlockMode ECB = CipherBlockMode.ECB;
     private final String text;
-    private final CipherUtils cipherUtils;
+    private final ByteCipherImpl cipherUtils;
     private final Key key;
 
-    public CipherUtilsSymmetricKeyEcbTest(String text, EncryptionAlgorithm algorithm) throws NoSuchAlgorithmException {
+    public ByteCipherImplSymmetricKeyEcbTest(String text, CypherAlgorithm algorithm) throws NoSuchAlgorithmException {
         this.text = text;
-        ICipherAlgorithm encryptionAlgorithm = algorithm.getCipherAlgorithm();
-        this.cipherUtils = new CipherUtils(encryptionAlgorithm);
-        this.key = new KeySpecUtils(encryptionAlgorithm.getAlgorithm()).generateNewKeySpec(algorithm.getKeySize());
+        CipherAlgorithm encryptionAlgorithm = algorithm.getCipherAlgorithm();
+        this.cipherUtils = new ByteCipherImpl(encryptionAlgorithm);
+        this.key = new SecretKeyGenerator(encryptionAlgorithm.getAlgorithm()).generateNewKey(algorithm.getKeySize());
     }
 
     @Parameters
     public static Collection<Object[]> data() {
         return Stream.of("test", "(teststring)*(^*&787867", null, "", "\u4321\u3395\u2121").flatMap(
-                t -> Arrays.stream(EncryptionAlgorithm.values()).filter(EncryptionAlgorithm::isSymmetric)
-                        .filter(a -> ECB.toString().equals(a.getCipherAlgorithm().getCipherMode()))
+                t -> Arrays.stream(CypherAlgorithm.values()).filter(CypherAlgorithm::isSymmetric)
+                        .filter(a -> ECB.toString().equals(a.getCipherAlgorithm().getCipherBlockMode()))
                         .map(a -> new Object[]{t, a})).collect(Collectors.toList());
     }
 

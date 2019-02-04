@@ -1,4 +1,4 @@
-package ro.rasel.utils.criptography;
+package ro.rasel.utils.criptography.keystore;
 
 import java.io.File;
 import java.io.FileInputStream;
