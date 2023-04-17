@@ -4,9 +4,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import ro.rasel.utils.criptography.key.KeyPairGenerator;
-import ro.rasel.utils.criptography.key.KeyPairGeneratorImpl;
-import ro.rasel.utils.encoding.EncodingUtils;
+import ro.rasel.criptography.ByteCipherImpl;
+import ro.rasel.criptography.CipherAlgorithm;
+import ro.rasel.criptography.CipherMode;
+import ro.rasel.criptography.key.KeyPairGenerator;
+import ro.rasel.criptography.key.KeyPairGeneratorImpl;
+import ro.rasel.encoding.EncodingUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -47,9 +50,9 @@ public class ByteCipherImplAsymmetricKeyTest {
         KeyPair keyPair = keyPairGenerator.generateNewKeyPair(2048);
         byte[] bytes = EncodingUtils.toBytes(text);
 
-        assertThat(EncodingUtils.toString(cipherUtils.convert(
-                cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, keyPair.getPrivate()),
-                CipherMode.DECRYPT_MODE, keyPair.getPublic())), is(text));
+        byte[] encryptedMessage = cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, keyPair.getPrivate());
+        byte[] decryptedMessage = cipherUtils.convert(encryptedMessage, CipherMode.DECRYPT_MODE, keyPair.getPublic());
+        assertThat(EncodingUtils.toString(decryptedMessage), is(text));
     }
 
     @Test

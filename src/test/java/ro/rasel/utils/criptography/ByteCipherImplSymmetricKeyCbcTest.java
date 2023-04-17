@@ -4,9 +4,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import ro.rasel.utils.criptography.key.IVParameterSpecGenerator;
-import ro.rasel.utils.criptography.key.SecretKeyGenerator;
-import ro.rasel.utils.encoding.EncodingUtils;
+import ro.rasel.criptography.ByteCipherImpl;
+import ro.rasel.criptography.CipherAlgorithm;
+import ro.rasel.criptography.CipherBlockMode;
+import ro.rasel.criptography.CipherMode;
+import ro.rasel.criptography.key.IVParameterSpecGenerator;
+import ro.rasel.criptography.key.SecretKeyGenerator;
+import ro.rasel.encoding.EncodingUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -56,9 +60,10 @@ public class ByteCipherImplSymmetricKeyCbcTest {
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
             NoSuchPaddingException, InvalidAlgorithmParameterException {
         byte[] bytes = EncodingUtils.toBytes(text);
-        assertThat(EncodingUtils.toString(cipherUtils.convert(
-                cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, key, algorithmParameterSpec),
-                CipherMode.DECRYPT_MODE, key, algorithmParameterSpec)), is(text));
+        byte[] encryptedMessage = cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, key, algorithmParameterSpec);
+        byte[] decryptedMessage =
+                cipherUtils.convert(encryptedMessage, CipherMode.DECRYPT_MODE, key, algorithmParameterSpec);
+        assertThat(EncodingUtils.toString(decryptedMessage), is(text));
     }
 
     @Test

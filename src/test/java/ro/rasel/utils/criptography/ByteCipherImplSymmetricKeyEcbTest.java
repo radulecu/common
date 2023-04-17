@@ -4,8 +4,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import ro.rasel.utils.criptography.key.SecretKeyGenerator;
-import ro.rasel.utils.encoding.EncodingUtils;
+import ro.rasel.criptography.ByteCipherImpl;
+import ro.rasel.criptography.CipherAlgorithm;
+import ro.rasel.criptography.CipherBlockMode;
+import ro.rasel.criptography.CipherMode;
+import ro.rasel.criptography.key.SecretKeyGenerator;
+import ro.rasel.encoding.EncodingUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -49,8 +53,9 @@ public class ByteCipherImplSymmetricKeyEcbTest {
             throws NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException,
             NoSuchPaddingException {
         byte[] bytes = EncodingUtils.toBytes(text);
-        assertThat(EncodingUtils.toString(cipherUtils
-                        .convert(cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, key), CipherMode.DECRYPT_MODE, key)),
+        byte[] encryptedMessage = cipherUtils.convert(bytes, CipherMode.ENCRYPT_MODE, key);
+        byte[] decryptedMessage = cipherUtils.convert(encryptedMessage, CipherMode.DECRYPT_MODE, key);
+        assertThat(EncodingUtils.toString(decryptedMessage),
                 is(text));
     }
 

@@ -1,5 +1,8 @@
 package ro.rasel.utils.criptography;
 
+import ro.rasel.criptography.CipherAlgorithm;
+import ro.rasel.criptography.CipherAlgorithmImpl;
+
 /**
  * This is an enum of supported and tested algorithms.
  */
